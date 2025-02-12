@@ -1,0 +1,143 @@
+-- Table: form_datos_facturacion
+
+-- DROP TABLE form_datos_facturacion;
+
+CREATE TABLE form_datos_facturacion
+(
+  form_did SERIAL PRIMARY KEY,
+  form_dnombres_completos character varying(200) NOT NULL, -- nombres completos o razón social
+  form_ddireccion character varying(200) NOT NULL, -- direccion
+  form_dfecha timestamp without time zone NOT NULL, -- Fecha de registro
+  form_dcedula character varying(150), -- Cedula para facturacion
+  form_dtelefono character varying(30), -- Telefono
+  form_dcorreo character varying(30), -- Correo electrónico  
+  form_dfecha_visita date NOT NULL, -- Fecha de visita
+  form_dhora_visita integer NOT NULL -- Horario visita
+ 
+)
+WITH (
+  OIDS=FALSE
+);
+
+  
+  
+-----------------------------------------------------------------------
+
+-- Table: form_datos_visitante
+
+-- DROP TABLE form_datos_visitante;
+
+CREATE TABLE form_datos_visitante
+(
+  form_dvid SERIAL PRIMARY KEY,
+  form_did INT,
+  form_dvnombres character varying(200) NOT NULL, -- nombres visitante
+  form_dvapellidos character varying(200) NOT NULL, -- apellidos visitante
+  form_dvcedula character varying(150), -- Cedula de visitante
+  form_dvtipo_visitante integer NOT NULL, --tipo de visitante
+  form_dvnacionalidad integer NOT NULL, --nacionalidad
+  form_dvgenero integer NOT NULL, --genero
+  form_dvfecha_nacimiento date NOT NULL, -- Fecha de nacimiento
+  form_dvcantidad integer NOT NULL, --cantidad
+  form_dvprecio numeric(10,0) , --precio unitario
+  form_dvprecio_total numeric(10,0), --precio total
+
+  CONSTRAINT form_datos_visitante_fk FOREIGN KEY (form_did)
+      REFERENCES form_datos_facturacion (form_did) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
+);
+
+
+  
+-----------------------------------------------------------------------
+
+-- Table: form_tipo_visitante
+
+-- DROP TABLE form_tipo_visitante;
+
+CREATE TABLE form_tipo_visitante
+(
+  form_tvid numeric(10,0) NOT NULL,
+  form_tvnombre character varying(100) NOT NULL, -- nombre de la opción
+  form_tvtarifa numeric(10,2)  NOT NULL, -- nombre de la opción
+  form_tvdescripcion character varying(200), -- descripcion de la opción
+  form_tvorden integer, -- orden de visualización
+  form_tvestado integer, -- estado
+  CONSTRAINT form_tipo_visitante_pk PRIMARY KEY (form_tvid)
+)
+WITH (
+  OIDS=FALSE
+);
+
+
+
+  
+-----------------------------------------------------------------------
+
+-- Table: form_horarios
+
+-- DROP TABLE form_horarios;
+
+CREATE TABLE form_horarios
+(
+  form_hid numeric(10,0) NOT NULL,
+  form_hnombre character varying(100) NOT NULL, -- nombre de la opción
+  form_hdescripcion character varying(200) NOT NULL, -- descripcion de la opción
+  form_horden integer, -- orden de visualización
+  form_hestado integer, -- estado
+  CONSTRAINT form_horarios_pk PRIMARY KEY (form_hid)
+)
+WITH (
+  OIDS=FALSE
+);
+
+
+
+-----------------------------------------------------------------------
+
+
+-- Table: form_nacionalidad
+
+-- DROP TABLE form_nacionalidad;
+
+CREATE TABLE form_nacionalidad
+(
+  form_nid numeric(10,0) NOT NULL,
+  form_nnombre character varying(100) NOT NULL, -- nombre de la opción
+  form_ndescripcion character varying(200) NOT NULL, -- descripcion de la opción
+  form_norden integer, -- orden de visualización
+  form_nestado integer, -- estado
+  CONSTRAINT form_nacionalidad_pk PRIMARY KEY (form_nid)
+)
+WITH (
+  OIDS=FALSE
+);
+
+
+-----------------------------------------------------------------------
+
+
+
+-- Table: form_datos_citas
+
+-- DROP TABLE form_datos_citas;
+
+CREATE TABLE form_datos_citas
+(
+  form_cid SERIAL PRIMARY KEY,
+  form_hid int, -- relacion con horario,
+  form_did int, -- relacion con persona solicita
+  form_cfecha date, -- Fecha de cita
+  CONSTRAINT form_datos_citas_fk FOREIGN KEY (form_did)
+      REFERENCES form_datos_facturacion (form_did) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT form_datos_citas_h_fk FOREIGN KEY (form_hid)
+      REFERENCES form_horarios (form_hid) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION	  
+)
+WITH (
+  OIDS=FALSE
+);
