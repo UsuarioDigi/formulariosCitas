@@ -39,13 +39,13 @@ class FormDatosVisitante extends \yii\db\ActiveRecord
     {
         return [
             [['form_did', 'form_dvtipo_visitante', 'form_dvnacionalidad', 'form_dvgenero', 'form_dvcantidad'], 'default', 'value' => null],
-            [['form_did', 'form_dvtipo_visitante', 'form_dvnacionalidad', 'form_dvgenero', 'form_dvcantidad'], 'integer'],
-            [['form_dvnombres', 'form_dvapellidos', 'form_dvtipo_visitante', 'form_dvnacionalidad', 'form_dvgenero', 'form_dvfecha_nacimiento', 'form_dvcantidad'], 'required'],
+            [['form_did', 'form_dvtipo_visitante', 'form_dvnacionalidad', 'form_dvgenero', 'form_dvcantidad','form_dvoriginario'], 'integer'],
+            [['form_dvtipo_visitante', 'form_dvnacionalidad', 'form_dvgenero', 'form_dvcantidad','form_dvoriginario','form_dvprecio', 'form_dvprecio_total'], 'required','message' => 'El campo no debe ser vacío.'],
             [['form_dvfecha_nacimiento'], 'safe'],
             [['form_dvprecio', 'form_dvprecio_total'], 'number'],
             [['form_dvnombres', 'form_dvapellidos'], 'string', 'max' => 200],
             [['form_dvcedula'], 'string', 'max' => 150],
-            [['form_did'], 'exist', 'skipOnError' => true, 'targetClass' => FormDatosFacturacion::class, 'targetAttribute' => ['form_did' => 'form_did']],
+            [['form_did'], 'exist', 'skipOnError' => true, 'targetClass' => FormDatosFacturacion::class, 'targetAttribute' => ['form_did' => 'form_did']],            
         ];
     }
 

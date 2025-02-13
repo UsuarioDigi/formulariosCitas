@@ -17,6 +17,7 @@ use Yii;
  * @property string $form_dfecha_visita
  * @property int $form_dhora_visita
  * @property string $form_adjunto
+ * * @property int $form_esoperadora
  */
 class FormDatosFacturacion extends \yii\db\ActiveRecord
 {
@@ -36,8 +37,9 @@ class FormDatosFacturacion extends \yii\db\ActiveRecord
             [['form_dnombres_completos', 'form_ddireccion', 'form_dfecha', 'form_dfecha_visita', 'form_dhora_visita','form_adjunto','form_dtotal'], 'required', 'message' => 'Este campo no puede estar vacío.'],            
             [['form_dfecha', 'form_dfecha_visita'], 'safe'],
             [['form_dhora_visita'], 'default', 'value' => null],
-            [['form_dhora_visita'], 'integer'],
+            [['form_dhora_visita','form_esoperadora'], 'integer'],
             [['form_dnombres_completos', 'form_ddireccion'], 'string', 'max' => 200],
+            [['form_registro_operadora'], 'string', 'max' => 100],            
             [['form_dcedula'], 'string', 'max' => 150],
             [['form_dtelefono', 'form_dcorreo'], 'string', 'max' => 30],            
             [['form_dcorreo'], 'email','message' => 'La dirección de correo no es válida.'],

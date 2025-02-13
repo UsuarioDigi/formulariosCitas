@@ -53,6 +53,15 @@ $this->registerJs($js);
     <div class="row">    
     <h3 class="panel-title"><i class="glyphicon glyphicon-envelope"></i> DATOS DE FACTURACIÓN</h3>
     <table class="table table-bordered">
+        <tr id="es_operadora_row">
+            <td>ES OPERADORA:</td>
+            <td colspan="3"><?= $form->field($model, 'form_esoperadora')->dropDownList([1=>'SI','2'=>'NO'],
+                                    ["prompt"=>"Seleccione una opción",'required'=>true])->label(false) ?></td>
+        </tr>
+        <tr id="registro_operadora_row">
+            <td>NÚMERO DE REGISTRO DE OPERADORA:</td>
+            <td colspan="3"><?= $form->field($model, 'form_registro_operadora')->textInput(['maxlength' => true])->label(false) ?></td>
+        </tr>
         <tr>
             <td>NOMBRES COMPLETOS O RAZÓN SOCIAL:</td>
             <td colspan="3"><?= $form->field($model, 'form_dnombres_completos')->textInput(['maxlength' => true])->label(false) ?></td>
@@ -122,13 +131,14 @@ $this->registerJs($js);
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>Nombre</th>
+                    <!--<th>Nombre</th>
                     <th>Apellido</th>
-                    <th>Cédula</th>
+                    <th>Cédula</th>-->
+                    <th>Origen</th>
                     <th>Tipo Visitante</th>
                     <th>Nacionalidad</th>
                     <th>Género</th>
-                    <th>Fecha de Nacimiento</th>
+                    <!--<th>Fecha de Nacimiento</th>-->
                     <th>Cantidad</th>
                     <th>Precio Unitario</th>
                     <th>Precio Total</th>
@@ -143,10 +153,13 @@ $this->registerJs($js);
                                 echo Html::activeHiddenInput($detalleVisitante, "[{$i}]form_dvid");
                             }
                         ?>
-                        <td><?= $form->field($detalleVisitante, "[{$i}]form_dvnombres")->textInput(['maxlength' => true])->label(false) ?></td>
+                        <td><?= $form->field($detalleVisitante, "[{$i}]form_dvoriginario")->dropDownList([1=>'NACIONAL','2'=>'EXTRANGERO'],
+                                    ["prompt"=>"Seleccione una opción",'required'=>true,"onchange"=>'poblarNacionalidad(this);'])->label(false) ?></td>
+                        <!--<td><?= $form->field($detalleVisitante, "[{$i}]form_dvnombres")->textInput(['maxlength' => true])->label(false) ?></td>
                         <td><?= $form->field($detalleVisitante, "[{$i}]form_dvapellidos")->textInput(['maxlength' => true])->label(false) ?></td>
                         <td><?= $form->field($detalleVisitante, "[{$i}]form_dvcedula")->textInput(['maxlength' => true])->label(false) ?></td>                        
-                        <td><?= $form->field($detalleVisitante, "[{$i}]form_dvtipo_visitante")->dropDownList(\yii\helpers\ArrayHelper::map(app\models\FormTipoVisitante::find()->all(),
+                        -->
+                        <td><?= $form->field($detalleVisitante, "[{$i}]form_dvtipo_visitante")->dropDownList(\yii\helpers\ArrayHelper::map(app\models\FormTipoVisitante::find()->orderBy(['form_tvorden' => SORT_ASC])->all(),
                                     "form_tvid","form_tvnombre"),
                                     ["prompt"=>"Seleccione una opción",'required'=>true,"onchange"=>'poblarTarifario(this);'])->label(false) ?></td>
                         <td><?= $form->field($detalleVisitante, "[{$i}]form_dvnacionalidad")->dropDownList(\yii\helpers\ArrayHelper::map(app\models\FormNacionalidad::find()->all(),
@@ -154,7 +167,8 @@ $this->registerJs($js);
                                     ["prompt"=>"Seleccione una opción",'required'=>true])->label(false) ?></td>                        
                         <td><?= $form->field($detalleVisitante, "[{$i}]form_dvgenero")->dropDownList([1=>'M','2'=>'F'],
                                     ["prompt"=>"Seleccione una opción",'required'=>true])->label(false) ?></td>
-                        <td><?= $form->field($detalleVisitante, "[{$i}]form_dvfecha_nacimiento",['inputOptions' => ['type'=>'date','required'=>true,'max'=>date('Y-m-d')]])->textInput()->label(false) ?> </td>                            
+                        <!--<td><?= $form->field($detalleVisitante, "[{$i}]form_dvfecha_nacimiento",['inputOptions' => ['type'=>'date','required'=>true,'max'=>date('Y-m-d')]])->textInput()->label(false) ?> </td>
+                        -->
                         <td><?= $form->field($detalleVisitante, "[{$i}]form_dvcantidad")->textInput(['maxlength' => true,"onblur"=>'calcularPrecio(this);'])->label(false) ?></td>
                         <td><?= $form->field($detalleVisitante, "[{$i}]form_dvprecio")->textInput(['maxlength' => true])->label(false) ?></td>
                         <td><?= $form->field($detalleVisitante, "[{$i}]form_dvprecio_total")->textInput(['maxlength' => true,'class' => 'precio-total'])->label(false) ?></td>
@@ -166,16 +180,24 @@ $this->registerJs($js);
             </tbody>
             <tfoot>
             <tr>
-                <td colspan="10"></td>
+                <td colspan="7"></td>
                 <td><button type="button" class="add-item btn btn-success btn-sm"><span class="fa fa-plus"></span>Nuevo</button></td>
             </tr>
             <tr>
-                    <td colspan="9">TOTAL A PAGAR ($)</td><td colspan="3"><?= $form->field($model, 'form_dtotal')->textInput(['maxlength' => 10])->label(false) ?></td>
+                    <td colspan="6">TOTAL A PAGAR ($)</td><td colspan="3"><?= $form->field($model, 'form_dtotal')->textInput(['maxlength' => 10])->label(false) ?></td>
                 </tr>
         </tfoot>
         </table>
         <div class="customer-form">
         <div class="row"> 
+        <p class="info-message">INFORMACIÓN BANCARIA<br/>
+        BENEFICIARIO: INSTITUTO NACIONAL DE PATRIMONIO CULTURAL<br/>
+        CUENTA CORRIENTE: 2100010305<br/>
+        BANCO: BANCO PICHINCHA<br/>
+        RUC: 1760006000001<br/>
+        EMAIL: recaudacion@patrimoniocultural.gob.ec<br/>
+        </p>
+
         <?= $form->field($model, 'form_adjunto')->fileInput()->label('COMPROBANTE DE PAGO') ?>
         </div>
         </div>
@@ -183,15 +205,10 @@ $this->registerJs($js);
 
     <?php DynamicFormWidget::end(); ?>
 
-
     <div class="form-group">
 
     <?= Html::submitButton('Guardar', ['class' => 'btn btn-success']) ?>
-
     </div>
-
-
     <?php ActiveForm::end(); ?>
-
 
 </div>

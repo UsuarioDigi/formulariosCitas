@@ -238,8 +238,10 @@ class FormDatosFacturacionController extends Controller
     {               
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $id_val = Yii::$app->request->get('valorid'); // Cambiado a 'get'      
+        $val_opera = Yii::$app->request->get('val_opera');            
         $horario = FormHorarios::find()     
-                    ->where(['=', 'form_hestado', 1])                                  
+                    ->where(['=', 'form_hestado', 1])  
+                    ->andWhere(['=', 'form_hoperadora', $val_opera])                                
                     ->orderBy(['form_hid' => SORT_ASC])
                     ->all();
         $html="<option value=''>Seleccione un horario</option>"; 
@@ -251,9 +253,11 @@ class FormDatosFacturacionController extends Controller
                 $cita = FormDatosCitas::find()
                     ->where(['=', 'form_cfecha', $id_val])
                     ->andWhere(['=', 'form_hid', $clave->form_hid])
-                    ->count();                                       
-                    if($cita>0)continue;
-                    $html .= "<option value='".$clave->form_hid."'>".$clave->form_hnombre."</option>";
+                    ->count(); 
+                    $turno_d =5-$cita;
+                    if($turno_d<1)continue;
+                    $html .= "<option value='".$clave->form_hid."'>".$clave->form_hnombre." - ".$turno_d." boletos </option>";                    
+
             }
              }else{
                    $html .="<option value=''></option>";

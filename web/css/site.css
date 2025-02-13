@@ -89,3 +89,22 @@ a.desc:after {
 .has-error .help-block {
     color: red;
 }
+.info-message {
+    background-color: #e7f3fe;
+    color: #31708f;
+    border: 1px solid #bce8f1;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+.banner {
+    width: 100%;
+    background-color: #f5f5f5; /* Cambia el color según tus preferencias */
+    text-align: center;
+    padding: 10px 0; /* Ajusta el padding según sea necesario */
+}
+
+.banner-image {
+    max-width: 100%;
+    height: auto;
+}
