@@ -2,6 +2,7 @@
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
+require __DIR__ . '/constants.php';
 
 $config = [
     'id' => 'basic',
@@ -31,7 +32,11 @@ $config = [
             'class' => \yii\symfonymailer\Mailer::class,
             'viewPath' => '@app/mail',
             // send all mails to a file by default.
-            'useFileTransport' => true,
+            'useFileTransport' => false,
+            'transport' => [             
+                'dsn' => 'smtp://notificacion.cai@patrimoniocultural.gob.ec:Ncai.2025%2A@mail.patrimoniocultural.gob.ec:465', // Usar el formato DSN
+                'encryption' => 'ssl',
+            ],
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -47,20 +52,18 @@ $config = [
 			'enablePrettyUrl' => true,
 			'showScriptName' => false,
 			'rules' => [
-				'formdatosfacturacion' => 'form-datos-facturacion/index', 
+        '' => 'form-datos-facturacion/create',        
+				'formdatosfacturacion/reporte' => 'form-datos-facturacion/index', 
 				'formdatosfacturacion/<id:\d+>' => 'form-datos-facturacion/view', 
 				'formdatosfacturacion/create' => 'form-datos-facturacion/create', 
 				'formdatosfacturacion/update/<id:\d+>' => 'form-datos-facturacion/update', 
 				'formdatosfacturacion/delete/<id:\d+>' => 'form-datos-facturacion/delete',                 
                 'GET formdatosfacturacion/obtenerpreciotarifa' => 'form-datos-facturacion/obtenerpreciotarifa',           
-                'GET formdatosfacturacion/obtenerhorariosdisponibles' => 'form-datos-facturacion/obtenerhorariosdisponibles',     
-                'formdatosfacturacion/fix-status' => 'form-datos-facturacion/fix-status',      
+                'GET formdatosfacturacion/obtenerhorariosdisponibles' => 'form-datos-facturacion/obtenerhorariosdisponibles',
+           
 				],
 			
 		],
-		
-		
-
     'assetManager' => [
         'bundles' => [
             'yii\web\JqueryAsset' => [
@@ -71,10 +74,6 @@ $config = [
             ],
         ],
     ],
-
-
-		
-
 
     ],
     'params' => $params,
@@ -96,5 +95,4 @@ if (YII_ENV_DEV) {
         //'allowedIPs' => ['127.0.0.1', '::1'],
     ];
 }
-
 return $config;
