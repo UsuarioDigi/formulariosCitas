@@ -167,7 +167,7 @@ class FormDatosFacturacionController extends Controller
                         }
                     }
                     $transaction->commit();
-                    $this-> actionSendNotification($model, $detalleVisitantes);
+                    $this-> actionSendNotification($model, $detalleVisitantes,"registro");
                     
                     Yii::$app->session->setFlash('success', 'Los datos se almacenaron con éxito.');
                     return $this->refresh();
@@ -288,56 +288,106 @@ class FormDatosFacturacionController extends Controller
     /*
      * Función para enviar un email al usuario que factura
      */
-    public function actionSendNotification($model, $detalleVisitantes)
+    public function actionSendNotification($model, $detalleVisitantes=null,$tipo_mensaje)
     {
         $subject = EMAIL_SUBJECT;
         $nombre_usuario = $model->form_dnombres_completos;
         $fecha_compra = $model->form_dfecha;
         $listaCantidad = "";
         $totalCantidad = 0;
-        foreach ($detalleVisitantes as $detalleVisitante) {
-            $modelTipoVisitante = FormTipoVisitante::findOne($detalleVisitante->form_dvtipo_visitante);
-            $nombreSeleccionado = $modelTipoVisitante ? $modelTipoVisitante->form_tvnombre : null;
-            $listaCantidad .= "- $nombreSeleccionado: $detalleVisitante->form_dvcantidad\n";
-            $totalCantidad += $detalleVisitante->form_dvcantidad;
-        };
-        $cantidad_boletos = $totalCantidad;
-        $monto_total = $model->form_dtotal;
+        if($detalleVisitantes!=null){
+            foreach ($detalleVisitantes as $detalleVisitante) {
+                $modelTipoVisitante = FormTipoVisitante::findOne($detalleVisitante->form_dvtipo_visitante);
+                $nombreSeleccionado = $modelTipoVisitante ? $modelTipoVisitante->form_tvnombre : null;
+                $listaCantidad .= "- $nombreSeleccionado: $detalleVisitante->form_dvcantidad\n";
+                $totalCantidad += $detalleVisitante->form_dvcantidad;
+            }
+            $cantidad_boletos = $totalCantidad;
+            $monto_total = $model->form_dtotal;
+        }
         $telefono_contacto = Yii::$app->params['contactoINPC'];
 
         $lista = rtrim($listaCantidad, ", "); 
-        $body = <<<EOT
-        Estimado/a $nombre_usuario,
+        if($tipo_mensaje=="registro"){
+            $body = <<<EOT
+            Estimado/a $nombre_usuario,
 
-        Reciba un cordial saludo.
+            Reciba un cordial saludo.
 
-        Por medio de la presente, le notificamos que su compra de boletos para el **Complejo Arqueológico Ingapirca** ha sido procesada exitosamente. A continuación, encontrará los detalles de su transacción:
+            Por medio de la presente, le notificamos que su compra de boletos para el **Complejo Arqueológico Ingapirca** ha sido registrada exitosamente. A continuación, encontrará los detalles de su transacción:
 
-        - **Fecha de compra:** $fecha_compra
-        - **Cantidad de boletos:** $cantidad_boletos
-        $lista
-        - **Monto total:** $ $monto_total
+            - **Fecha de compra:** $fecha_compra
+            - **Cantidad de boletos:** $cantidad_boletos
+            $lista
+            - **Monto total:** $ $monto_total
 
-        Si requiere asistencia o tiene alguna inquietud, no dude en contactarnos al teléfono $telefono_contacto.
+            Una vez que se valide el depósito efectuado se notificará la confirmación para el ingreso.
 
-        Agradecemos su visita y esperamos que disfrute de su experiencia en el Complejo Arqueológico Ingapirca.
+            Si requiere asistencia o tiene alguna inquietud, no dude en contactarnos al teléfono $telefono_contacto.
 
-        Atentamente,
+            Atentamente,
 
-        **Equipo CAI**
-        Teléfono: $telefono_contacto
-        EOT;
+            **Equipo CAI**
+            Teléfono: $telefono_contacto
+            EOT;
+        }
+        else if($tipo_mensaje=="rev_exito")
+        {
+            $body = <<<EOT
+            Estimado/a $nombre_usuario,
+            Reciba un cordial saludo.
 
-        Yii::$app->mailer->compose()
+            Por medio de la presente, le notificamos que posterior a la validación, se CONFIRMA su compra de boletos para el **Complejo Arqueológico Ingapirca**.
+            
+            Agradecemos su visita y esperamos que disfrute de su experiencia en el Complejo Arqueológico Ingapirca y le recordamos que debe presentarse a las instalaciones 10 minutos antes de su horario de ingreso                                                            
+            
+            Si requiere asistencia o tiene alguna inquietud, no dude en contactarnos al teléfono $telefono_contacto.
+
+            Atentamente,
+
+            **Equipo CAI**
+            Teléfono: $telefono_contacto
+            EOT;
+        }
+        else if($tipo_mensaje=="rev_rechazo")
+        {
+            $body = <<<EOT
+            Estimado/a $nombre_usuario,
+            Reciba un cordial saludo.
+
+            Por medio de la presente, le notificamos que posterior a la validación, se RECHAZA su compra de boletos para el **Complejo Arqueológico Ingapirca**.
+            
+            Agradecemos revisar la transferencia/depósitos realizados, ya que en nuestros sitemas no se registra el comprobante enviado.
+            
+            Si requiere asistencia o tiene alguna inquietud, no dude en contactarnos al teléfono $telefono_contacto.
+            
+            Atentamente,
+
+            **Equipo CAI**
+            Teléfono: $telefono_contacto
+            EOT;
+        }
+        $result =Yii::$app->mailer->compose()
             ->setTo($model->form_dcorreo)  // Dirección de correo del destinatario
             ->setFrom(Yii::$app->params['caiEmail'])  // Dirección de correo de envío
             ->setSubject($subject)
             ->setTextBody($body)  // Cuerpo del mensaje (puedes usar HTML también con setHtmlBody())
             ->send();
 
-        // Redirigir a otra página o mostrar un mensaje de éxito
-        Yii::$app->session->setFlash('success', 'Correo enviado correctamente.');
-        return $this->redirect(['index']);  // O la vista que desees
+            if ($result) {
+                Yii::info('Correo enviado correctamente a ' . $model->form_dcorreo, __METHOD__);
+            } else {
+                Yii::error('Error al enviar correo a ' . $model->form_dcorreo, __METHOD__);
+            }
+        
+            // No redirigir dentro de esta función para evitar confusión
+            // Yii::$app->session->setFlash('success', 'Correo enviado correctamente.');
+            // return $this->redirect(['index']);  // O la vista que desees
+            
+            return $result;
+        
+        
+    
     }
     public function actionChangeStatus($id)
     {
@@ -458,9 +508,26 @@ class FormDatosFacturacionController extends Controller
       if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
           $model->form_estado_factura = Yii::$app->request->post('FormDatosFacturacion')['form_estado_factura'];
           if ($model->save(false, ['form_estado_factura'])) {
+            /*Validacion si es rechazado el registro*/
+            if($model->form_estado_factura==3) {/*Estado 3 es rechazado. Actualiza el estado de la información de la cita a 2 que indica que no se tome en cuenta en la asignación de cupos disponibles, se envía correo indicando que se rechaza*/
+                $relatedModel = FormDatosCitas::findOne(['form_did' => $model->form_did]);
+                if ($relatedModel !== null) {
+                    $relatedModel->form_dcestado = 2;
+                    if (!$relatedModel->save(false, ['form_dcestado'])) {
+                        return ['success' => false, 'errors' => $relatedModel->errors];
+                    }
+                    else 
+                        $this-> actionSendNotification($model, "","rev_rechazo");
+                } else {
+                    return ['success' => false, 'errors' => 'Modelo relacionado no encontrado.'];
+                }
+            }
+            else if($model->form_estado_factura==2) { /*Estado 2 es revisado. Solo envía notificación indicando que se validó */
+                $this-> actionSendNotification($model, "","rev_exito");
+            }
               return ['success' => true];
           }
-      }
+      }      
       return ['success' => false, 'errors' => $model->errors];
     }       
 }

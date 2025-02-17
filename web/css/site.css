@@ -145,6 +145,9 @@ table.kv-grid-table .estado-pendiente {
 .row-reviewed {
     background-color: #d4edda; /* Verde claro */
 }
+.row-reject {
+    background-color: #cac9c9; /* Gris */
+}
 .banner {
     text-align: center;
     margin-bottom: 0px;
@@ -188,7 +191,4 @@ table.kv-grid-table .estado-pendiente {
     font-size: 12px; /* Tamaño de la letra pequeña */
     border-radius: 3px; /* Esquinas redondeadas */
     font-family: Arial, sans-serif; /* Fuente */
-}
-.kv-grid-table table .table-bordered .table-striped .kv-table-wrap{
-    background-color: #0d1469;
 }

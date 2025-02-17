@@ -1,9 +1,5 @@
 <?php
-
-use kartik\export\ExportMenu;
-use kartik\grid\GridView;
-use yii\data\ActiveDataProvider;
-use yii\grid\ActionColumn;
+use app\models\FormDatosFacturacion;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\bootstrap5\Modal;
@@ -35,8 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
        <!--<?= Html::a('Create Form Datos Facturacion', ['create'], ['class' => 'btn btn-success']) ?>-->
     </p>
-
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    
     <?php
     Pjax::begin(['id' => 'pjax-container']);
     ?>
@@ -48,6 +43,8 @@ $this->params['breadcrumbs'][] = $this->title;
             return ['class' => 'row-pending'];
         } elseif ($model->form_estado_factura == 2) {
             return ['class' => 'row-reviewed'];
+        } elseif ($model->form_estado_factura == 3) {
+            return ['class' => 'row-reject'];
         }
     },
         'columns' => [
@@ -55,10 +52,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
             //'form_did',
             'form_dnombres_completos',
-            'form_ddireccion',
+            //'form_ddireccion',
             'form_dfecha',
             'form_dcedula',
-            'form_dtelefono',
+            //'form_dtelefono',
             'form_dcorreo',
             'form_dfecha_visita',
             //'form_dhora_visita',
@@ -71,30 +68,40 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'form_estado_factura',
                 'value' => function($model) {
-                    return $model->form_estado_factura == 1 ? 'PENDIENTE' : 'REVISADO';
-                },
+                switch ($model->form_estado_factura) {
+                    case 1:
+                        return 'PENDIENTE';
+                    case 2:
+                        return 'REVISADO';
+                    case 3:
+                    return 'RECHAZADO';
+                default:
+                return 'DESCONOCIDO'; // Manejo de caso por defecto
+                }
+            },
                 'filter' => [
                     1 => 'PENDIENTE',
                     2 => 'REVISADO',
+                    3 => 'RECHAZADO',
                 ],
             ],
             [
                 'class' => ActionColumn::class,
-                'template' => '{view}{change-status}',
+                'template' => '{view} {change-status}',
                 'buttons' => [
                     'change-status' => function ($url, $model, $key) {
-                        return Html::a('<span class="fa fa-refresh"></span>', '#', [
-                            'class' => 'change-status-link',
-                            'data-url' => Url::to(['change-status', 'id' => $model->form_did]),
-                            'data-toggle' => 'modal',
-                            'data-target' => '#changeStatusModal',
-                        ]);
+                        if ($model->form_estado_factura !== 3) { // Mostrar solo si el estado no es 3
+                            return Html::a('<span class="fa fa-refresh"></span>', '#', [
+                                'class' => 'change-status-link',
+                                'data-url' => Url::to(['change-status', 'id' => $model->form_did]),
+                                'data-toggle' => 'modal',
+                                'data-target' => '#changeStatusModal',
+                            ]);
+                        }
+                        return ''; // No mostrar nada si el estado es 3
                     },
                 ],
-                'urlCreator' => function ($action, FormDatosFacturacion $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'form_did' => $model->form_did]);
-                 }
-            ],
+            ],            
         ],
         'summary' => 'Mostrando {begin} - {end} de {totalCount} registros',
     ]); 
@@ -105,7 +112,6 @@ Modal::begin([
     'id' => 'changeStatusModal',
     'title' => '<h4>Actualizar Estado</h4>'
 ]);
-
 echo '<div id="modalContent"></div>';
 
 Modal::end();
@@ -138,7 +144,5 @@ $this->registerJs("
         return false;
     });
 ");
-
-
 ?>
 </div>
