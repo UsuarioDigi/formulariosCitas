@@ -118,6 +118,9 @@ a.desc:after {
 .row-reviewed {
     background-color: #d4edda; /* Verde claro */
 }
+.row-reject {
+    background-color: #cac9c9; /* Gris */
+}
 .banner {
     text-align: center;
     margin-bottom: 0px;
@@ -151,4 +154,14 @@ a.desc:after {
         text-transform: uppercase; /* Transformar el texto a mayúsculas */
         font-weight: bold; /* Poner el texto en negritas */
         border-radius: 5px; /* Bordes redondeados para un mejor efecto visual */
+}
+.warning-message {
+    background-color: #ffcc00; /* Color de fondo amarillo */
+    color: #333; /* Color del texto */
+    border: 1px solid #ffcc00; /* Borde del mensaje */
+    padding: 5px; /* Espaciado interno */
+    margin: 5px 0; /* Margen superior e inferior */
+    font-size: 12px; /* Tamaño de la letra pequeña */
+    border-radius: 3px; /* Esquinas redondeadas */
+    font-family: Arial, sans-serif; /* Fuente */
 }

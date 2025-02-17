@@ -124,7 +124,7 @@ function calcularPrecio(campo){
         // Obtener el texto que se muestra en la opción seleccionada
         var displayedText = selectedOption.text;
         var separa_campo_sele = displayedText.split('-');
-        var item_tot = separa_campo_sele[2];
+        var item_tot = separa_campo_sele[1];
         var separa_campo_sele2 = item_tot.split(' ');
         var item_tot2 = parseInt(separa_campo_sele2[1]);
         console.log("item"+item_tot2 + "cantidad"+valor_campo);

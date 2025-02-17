@@ -13,7 +13,7 @@ use yii\widgets\ActiveForm;
         'action' => ['form-datos-facturacion/fix-status', 'id' => $model->form_did],
         'options' => ['data-pjax' => true]
     ]); ?>
-    <?= $form->field($model, 'form_estado_factura')->dropDownList([1 => 'PENDIENTE', 2 => 'REVISADO'])->label(false)?>
+    <?= $form->field($model, 'form_estado_factura')->dropDownList([1 => 'PENDIENTE', 2 => 'REVISADO',3=>'RECHAZADO'])->label(false)?>
     <div class="form-group">
         <?= Html::submitButton('Guardar', ['class' => 'btn btn-success']) ?>
     </div>
