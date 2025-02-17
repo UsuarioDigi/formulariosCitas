@@ -66,15 +66,15 @@ $config = [
 			'enablePrettyUrl' => true,
 			'showScriptName' => false,
 			'rules' => [
-                '' => 'form-datos-facturacion/create',        
+        '' => 'form-datos-facturacion/create',        
 				'formdatosfacturacion/reporte' => 'form-datos-facturacion/index', 
-				'formdatosfacturacion/view/<form_did:\d+>' => 'form-datos-facturacion/view', 
+				'formdatosfacturacion/<id:\d+>' => 'form-datos-facturacion/view', 
 				'formdatosfacturacion/create' => 'form-datos-facturacion/create', 
 				'formdatosfacturacion/update/<id:\d+>' => 'form-datos-facturacion/update', 
 				'formdatosfacturacion/delete/<id:\d+>' => 'form-datos-facturacion/delete',                 
                 'GET formdatosfacturacion/obtenerpreciotarifa' => 'form-datos-facturacion/obtenerpreciotarifa',           
-                'GET formdatosfacturacion/obtenerhorariosdisponibles' => 'form-datos-facturacion/obtenerhorariosdisponibles',     
-                'formdatosfacturacion/fix-status' => 'form-datos-facturacion/fix-status',      
+                'GET formdatosfacturacion/obtenerhorariosdisponibles' => 'form-datos-facturacion/obtenerhorariosdisponibles',
+           
 				],
 			
 		],
