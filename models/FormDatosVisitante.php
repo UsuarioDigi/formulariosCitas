@@ -60,13 +60,14 @@ class FormDatosVisitante extends \yii\db\ActiveRecord
             'form_dvnombres' => 'Nombres',
             'form_dvapellidos' => 'Apellidos',
             'form_dvcedula' => 'Cédula',
+            'form_dvoriginario'=>'Origen visita',
             'form_dvtipo_visitante' => 'Tipo visitante',
-            'form_dvnacionalidad' => 'Form Dvnacionalidad',
+            'form_dvnacionalidad' => 'Nacionalidad',
             'form_dvgenero' => 'Form Dvgenero',
             'form_dvfecha_nacimiento' => 'Form Dvfecha Nacimiento',
-            'form_dvcantidad' => 'Form Dvcantidad',
-            'form_dvprecio' => 'Form Dvprecio',
-            'form_dvprecio_total' => 'Form Dvprecio Total',
+            'form_dvcantidad' => 'Cantidad',
+            'form_dvprecio' => 'Precio',
+            'form_dvprecio_total' => 'Precio Total',
         ];
     }
 
@@ -80,7 +81,11 @@ class FormDatosVisitante extends \yii\db\ActiveRecord
         return $this->hasOne(FormDatosFacturacion::class, ['form_did' => 'form_did']);
     }
     public function getTipovisitante()
-{
-    return $this->hasOne(FormTipoVisitante::class, ['form_tvid' => 'form_dvtipo_visitante']);
-}
+    {
+        return $this->hasOne(FormTipoVisitante::class, ['form_tvid' => 'form_dvtipo_visitante']);
+    }
+    public function getNacionalidad()
+    {
+        return $this->hasOne(FormNacionalidad::class, ['form_nid' => 'form_dvnacionalidad']);
+    }
 }

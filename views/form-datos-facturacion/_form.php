@@ -51,7 +51,7 @@ $this->registerJs($js);
     
 
     <div class="row">    
-    <h3 class="panel-title"><i class="glyphicon glyphicon-envelope"></i> DATOS DE FACTURACIÓN</h3>
+    <h5 class="titulo_secundario"><i class="glyphicon glyphicon-envelope"></i> DATOS DE FACTURACIÓN</h5>
     <table class="table table-bordered">
         <tr id="es_operadora_row">
             <td>ES OPERADORA:</td>
@@ -72,7 +72,16 @@ $this->registerJs($js);
         </tr>
         <tr>
             <td>FECHA:</td>
-            <td colspan="3"><?= $form->field($model, 'form_dfecha',['inputOptions' => ['type'=>'date','required'=>true, 'value' => date('Y-m-d')]])->textInput()->label(false) ?>            </td>
+            <td colspan="3">
+    <?= $form->field($model, 'form_dfecha', [
+        'inputOptions' => [
+            'type' => 'date',
+            'required' => true,
+            'value' => date('Y-m-d'),
+            'readonly' => true, // Agregando el atributo readonly
+        ]
+    ])->textInput()->label(false) ?>
+</td>
         </tr>
         <tr>
             <td>No. CÉDULA / RUC:</td>
@@ -100,7 +109,7 @@ $this->registerJs($js);
         <div class="line line-dashed"></div>
 
     </div>
-
+    <h5 class="titulo_secundario"><i class="glyphicon glyphicon-envelope"></i> DATOS DE VISITANTES</h5>
     <?php DynamicFormWidget::begin([            
             'widgetContainer' => 'dynamicform_wrapper', // required: only alphanumeric characters plus "_" [A-Za-z0-9_]
             'widgetBody' => '.container-items', // required: css class selector
@@ -182,15 +191,18 @@ $this->registerJs($js);
                 <td><button type="button" class="add-item btn btn-success btn-sm"><span class="fa fa-plus"></span>Nuevo</button></td>
             </tr>
             <tr>
-                    <td colspan="6">TOTAL A PAGAR ($)</td>
-                    <td><?= $form->field($model, 'form_dtcantidad')->textInput(['maxlength' => 10])->label(false) ?></td>
-                    <td colspan="3"><?= $form->field($model, 'form_dtotal')->textInput(['maxlength' => 10])->label(false) ?></td>
+                    <td colspan="4">TOTAL A PAGAR ($)</td>
+                    <td class="hidden"><?= $form->field($model, 'form_dtcantidad')->textInput(['maxlength' => 10])->label(false) ?></td>
+                    <td></td>
+                    <td colspan="2"><?= $form->field($model, 'form_dtotal')->textInput(['maxlength' => 10])->label(false) ?></td>
                 </tr>
         </tfoot>
         </table>
         <div class="customer-form">
         <div class="row"> 
-        <p class="info-message">INFORMACIÓN BANCARIA<br/>
+        <h5 class="titulo_secundario"><i class="glyphicon glyphicon-envelope"></i> INFORMACIÓN TRANSFERENCIAS O DEPÓSITOS</h5>
+        <p class="info-message">        
+        INFORMACIÓN BANCARIA<br/>
         BENEFICIARIO: INSTITUTO NACIONAL DE PATRIMONIO CULTURAL<br/>
         CUENTA CORRIENTE: 2100010305<br/>
         BANCO: BANCO PICHINCHA<br/>

@@ -9,6 +9,7 @@ use yii\bootstrap5\Breadcrumbs;
 use yii\bootstrap5\Html;
 use yii\bootstrap5\Nav;
 use yii\bootstrap5\NavBar;
+use yii\helpers\Url;
 
 use yii\web\JqueryAsset;
 use wbraganca\dynamicform\DynamicFormAsset;
@@ -67,9 +68,11 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
     NavBar::end();
     ?>
 </header>
-
 <main id="main" class="flex-shrink-0" role="main">
     <div class="container">
+    <div class="banner">
+        <img src="<?= Url::to('@web/images/banner.jpg') ?>" alt="Banner" class="img-responsive">
+    </div>
         <?php if (!empty($this->params['breadcrumbs'])): ?>
             <?= Breadcrumbs::widget(['links' => $this->params['breadcrumbs']]) ?>
         <?php endif ?>

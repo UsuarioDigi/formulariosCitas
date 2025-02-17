@@ -70,7 +70,8 @@ $config = [
 				'formdatosfacturacion/update/<id:\d+>' => 'form-datos-facturacion/update', 
 				'formdatosfacturacion/delete/<id:\d+>' => 'form-datos-facturacion/delete',                 
                 'GET formdatosfacturacion/obtenerpreciotarifa' => 'form-datos-facturacion/obtenerpreciotarifa',           
-                'GET formdatosfacturacion/obtenerhorariosdisponibles' => 'form-datos-facturacion/obtenerhorariosdisponibles',           
+                'GET formdatosfacturacion/obtenerhorariosdisponibles' => 'form-datos-facturacion/obtenerhorariosdisponibles',     
+                'formdatosfacturacion/fix-status' => 'form-datos-facturacion/fix-status',      
 				],
 			
 		],
