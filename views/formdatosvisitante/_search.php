@@ -24,21 +24,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'form_dvapellidos') ?>
 
     <?= $form->field($model, 'form_dvcedula') ?>
-
-    <?php // echo $form->field($model, 'form_dvtipo_visitante') ?>
-
-    <?php // echo $form->field($model, 'form_dvnacionalidad') ?>
-
-    <?php // echo $form->field($model, 'form_dvgenero') ?>
-
-    <?php // echo $form->field($model, 'form_dvfecha_nacimiento') ?>
-
-    <?php // echo $form->field($model, 'form_dvcantidad') ?>
-
-    <?php // echo $form->field($model, 'form_dvprecio') ?>
-
-    <?php // echo $form->field($model, 'form_dvprecio_total') ?>
-
+    
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
         <?= Html::resetButton('Reset', ['class' => 'btn btn-outline-secondary']) ?>

@@ -1,4 +1,4 @@
-<?php 
+<?php
 use yii\helpers\Html;
 
 use yii\widgets\ActiveForm;
@@ -12,19 +12,13 @@ use wbraganca\dynamicform\DynamicFormWidget;
 
 /* @var $modelsAddress app\modules\yii2extensions\models\Address */
 
-
 $js = '
-
 jQuery(".dynamicform_wrapper").on("afterInsert", function(e, item) {
 
     jQuery(".dynamicform_wrapper .panel-title-address").each(function(index) {
         jQuery(this).html("Address: " + (index + 1))
     });
-    //jQuery(item).find("input[name*=\'[form_dvcantidad]\']").val(1);
-
 });
-
-
 jQuery(".dynamicform_wrapper").on("afterDelete", function(e) {
 
     jQuery(".dynamicform_wrapper .panel-title-address").each(function(index) {
@@ -32,20 +26,11 @@ jQuery(".dynamicform_wrapper").on("afterDelete", function(e) {
         jQuery(this).html("Address: " + (index + 1))
 
     });
-
-});
-
-';
-
-
+});';
 $this->registerJs($js);
 
 ?>
-
-
 <div class="customer-form">
-
-
     <?php $form = ActiveForm::begin(['id' => 'dynamic-form',
     'options' => ['enctype' => 'multipart/form-data','style' => 'width: 100%; max-width: 2000px;']]); ?>
     
@@ -97,7 +82,8 @@ $this->registerJs($js);
         </tr>
         <tr>
             <td>FECHA DE VISITA:</td><td><?= $form->field($model, 'form_dfecha_visita',['inputOptions' => ['type'=>'date','required'=>true,"onchange"=>'poblarHorarios(this);','min'=>date('Y-m-d')]])->textInput()->label(false) ?> </td>    
-            <td>HORA DE VISITA:</td><td><?= $form->field($model, 'form_dhora_visita')->dropDownList([], ["prompt"=>"Seleccione una opción",'required'=>true,"onchange"=>'poblarTarifario(this);'])->label(false) ?></td>
+            <td>HORA DE VISITA:</td><td><?= $form->field($model, 'form_dhora_visita')->dropDownList([], ["prompt"=>"Seleccione una opción",'required'=>true,"onchange"=>'poblarTarifario(this);'])->label(false) ?>
+        <p class="warning-message">Para el ingreso debe presentarse 10 minutos antes</p></td>
         </tr>
     </table>
 
@@ -161,11 +147,7 @@ $this->registerJs($js);
                             }
                         ?>
                         <td><?= $form->field($detalleVisitante, "[{$i}]form_dvoriginario")->dropDownList([1=>'NACIONAL','2'=>'EXTRANGERO'],
-                                    ["prompt"=>"Seleccione una opción",'required'=>true,"onchange"=>'poblarNacionalidad(this);'])->label(false) ?></td>
-                        <!--<td><?= $form->field($detalleVisitante, "[{$i}]form_dvnombres")->textInput(['maxlength' => true])->label(false) ?></td>
-                        <td><?= $form->field($detalleVisitante, "[{$i}]form_dvapellidos")->textInput(['maxlength' => true])->label(false) ?></td>
-                        <td><?= $form->field($detalleVisitante, "[{$i}]form_dvcedula")->textInput(['maxlength' => true])->label(false) ?></td>                        
-                        -->
+                                    ["prompt"=>"Seleccione una opción",'required'=>true,"onchange"=>'poblarNacionalidad(this);'])->label(false) ?></td>                                                                                                              
                         <td><?= $form->field($detalleVisitante, "[{$i}]form_dvtipo_visitante")->dropDownList(\yii\helpers\ArrayHelper::map(app\models\FormTipoVisitante::find()->orderBy(['form_tvorden' => SORT_ASC])->all(),
                                     "form_tvid","form_tvnombre"),
                                     ["prompt"=>"Seleccione una opción",'required'=>true,"onchange"=>'poblarTarifario(this);'])->label(false) ?></td>
@@ -173,9 +155,7 @@ $this->registerJs($js);
                                     "form_nid","form_nnombre"),
                                     ["prompt"=>"Seleccione una opción",'required'=>true])->label(false) ?></td>                        
                         <td><?= $form->field($detalleVisitante, "[{$i}]form_dvgenero")->dropDownList([1=>'M','2'=>'F'],
-                                    ["prompt"=>"Seleccione una opción",'required'=>true])->label(false) ?></td>
-                        <!--<td><?= $form->field($detalleVisitante, "[{$i}]form_dvfecha_nacimiento",['inputOptions' => ['type'=>'date','required'=>true,'max'=>date('Y-m-d')]])->textInput()->label(false) ?> </td>
-                        -->
+                                    ["prompt"=>"Seleccione una opción",'required'=>true])->label(false) ?></td>                                                
                         <td><?= $form->field($detalleVisitante, "[{$i}]form_dvcantidad")->textInput(['maxlength' => true,'class' => 'cantidad-total',"onblur"=>'calcularPrecio(this);'])->label(false) ?></td>
                         <td><?= $form->field($detalleVisitante, "[{$i}]form_dvprecio")->textInput(['maxlength' => true])->label(false) ?></td>
                         <td><?= $form->field($detalleVisitante, "[{$i}]form_dvprecio_total")->textInput(['maxlength' => true,'class' => 'precio-total'])->label(false) ?></td>
