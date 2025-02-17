@@ -64,20 +64,18 @@ $config = [
 			'enablePrettyUrl' => true,
 			'showScriptName' => false,
 			'rules' => [
-				'formdatosfacturacion' => 'form-datos-facturacion/index', 
+        '' => 'form-datos-facturacion/create',        
+				'formdatosfacturacion/reporte' => 'form-datos-facturacion/index', 
 				'formdatosfacturacion/<id:\d+>' => 'form-datos-facturacion/view', 
 				'formdatosfacturacion/create' => 'form-datos-facturacion/create', 
 				'formdatosfacturacion/update/<id:\d+>' => 'form-datos-facturacion/update', 
 				'formdatosfacturacion/delete/<id:\d+>' => 'form-datos-facturacion/delete',                 
                 'GET formdatosfacturacion/obtenerpreciotarifa' => 'form-datos-facturacion/obtenerpreciotarifa',           
-                'GET formdatosfacturacion/obtenerhorariosdisponibles' => 'form-datos-facturacion/obtenerhorariosdisponibles',     
-                'formdatosfacturacion/fix-status' => 'form-datos-facturacion/fix-status',      
+                'GET formdatosfacturacion/obtenerhorariosdisponibles' => 'form-datos-facturacion/obtenerhorariosdisponibles',
+           
 				],
 			
 		],
-		
-		
-
     'assetManager' => [
         'bundles' => [
             'yii\web\JqueryAsset' => [
@@ -88,10 +86,6 @@ $config = [
             ],
         ],
     ],
-
-
-		
-
 
     ],
     'params' => $params,
@@ -113,5 +107,4 @@ if (YII_ENV_DEV) {
         //'allowedIPs' => ['127.0.0.1', '::1'],
     ];
 }
-
 return $config;

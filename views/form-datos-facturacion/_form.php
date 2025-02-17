@@ -93,7 +93,7 @@ $this->registerJs($js);
         </tr>
         <tr>
             <td>CORREO ELECTRÓNICO:</td>
-            <td colspan="3"><?=  $form->field($model, 'form_dcorreo')->input('email', ['maxlength' => true,'required'=>true])->label(false)?></td>
+            <td colspan="3"><?=  $form->field($model, 'form_dcorreo')->input('email', ['maxlength' => false,'required'=>true])->label(false)?></td>
         </tr>
         <tr>
             <td>FECHA DE VISITA:</td><td><?= $form->field($model, 'form_dfecha_visita',['inputOptions' => ['type'=>'date','required'=>true,"onchange"=>'poblarHorarios(this);','min'=>date('Y-m-d')]])->textInput()->label(false) ?> </td>    
@@ -222,5 +222,4 @@ $this->registerJs($js);
     <?= Html::submitButton('Guardar', ['class' => 'btn btn-success']) ?>
     </div>
     <?php ActiveForm::end(); ?>
-
 </div>

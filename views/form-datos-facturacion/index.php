@@ -79,7 +79,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'class' => ActionColumn::class,
-                'template' => '{view}{delete}{change-status}',
+                'template' => '{view}{change-status}',
                 'buttons' => [
                     'change-status' => function ($url, $model, $key) {
                         return Html::a('<span class="fa fa-refresh"></span>', '#', [
@@ -141,4 +141,3 @@ $this->registerJs("
 
 ?>
 </div>
-
