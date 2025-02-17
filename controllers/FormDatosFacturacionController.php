@@ -105,6 +105,7 @@ class FormDatosFacturacionController extends Controller
             $transaction = \Yii::$app->db->beginTransaction();
 
             try {
+                $model->form_estado_factura=1;
                 if ($model->save(false)) {
                     Yii::info("form_did asignado: " . $model->form_did);
 
@@ -280,5 +281,18 @@ class FormDatosFacturacionController extends Controller
         return $this->renderAjax('_changeStatusForm', [
             'model' => $model,
         ]);
-    }       
+    }
+    public function actionFixStatus($id)
+    {
+    Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+    $model = $this->findModel($id);
+
+    if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
+        $model->form_estado_factura = Yii::$app->request->post('FormDatosFacturacion')['form_estado_factura'];
+        if ($model->save(false, ['form_estado_factura'])) {
+            return ['success' => true];
+        }
+    }
+    return ['success' => false, 'errors' => $model->errors];
+    }
 }

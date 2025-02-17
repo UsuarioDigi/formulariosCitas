@@ -11,7 +11,7 @@ $this->params['breadcrumbs'][] = $this->title;*/
 ?>
 <div class="form-datos-facturacion-create">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h4 class="titulo_principal"><?= Html::encode($this->title) ?></h4>
 
     <?= $this->render('_form', [
         'model' => $model,

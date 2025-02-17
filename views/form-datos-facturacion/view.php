@@ -59,15 +59,34 @@ $this->params['breadcrumbs'][] = $this->title;
     ]),
     'columns' => [
         ['class' => 'yii\grid\SerialColumn'],
-        'form_dvnombres',
-        'form_dvapellidos',
-        'form_dvcedula',        
+        //'form_dvnombres',
+        //'form_dvapellidos',
+        //'form_dvcedula',     
+        [
+            'attribute' => 'form_dvoriginario',
+            'value' => function($model) {
+                return $model->form_dvoriginario == 1 ? 'Nacional' : 'Extranjero';
+            },
+            'filter' => [
+                1 => 'Nacional',
+                2 => 'Extranjero',
+            ],
+        ],
         [
             'attribute' => 'form_dvtipo_visitante',
             'value' => function ($model) {
                 return $model->tipovisitante->form_tvnombre; 
             },
         ],
+        [
+            'attribute' => 'form_dvnacionalidad',
+            'value' => function ($model) {
+                return $model->nacionalidad->form_nnombre; 
+            },
+        ],
+        'form_dvcantidad',
+        'form_dvprecio',
+        'form_dvprecio_total'
     ],
 ]); ?>
 

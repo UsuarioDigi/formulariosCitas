@@ -18,7 +18,7 @@ class FormDatosFacturacionSearch extends FormDatosFacturacion
     {
         return [
             [['form_did'], 'number'],
-            [['form_dnombres_completos', 'form_ddireccion', 'form_dfecha', 'form_dcedula', 'form_dtelefono', 'form_dcorreo', 'form_dfecha_visita'], 'safe'],
+            [['form_dnombres_completos', 'form_ddireccion', 'form_dfecha', 'form_dcedula', 'form_dtelefono', 'form_dcorreo', 'form_dfecha_visita','form_estado_factura'], 'safe'],
             [['form_dhora_visita'], 'integer'],
         ];
     }
@@ -56,6 +56,12 @@ class FormDatosFacturacionSearch extends FormDatosFacturacion
             // $query->where('0=1');
             return $dataProvider;
         }
+        // Ajusta la búsqueda para convertir valores legibles a numéricos
+        if ($this->form_estado_factura == 'PENDIENTE') {
+            $this->form_estado_factura = 1;
+        } elseif ($this->form_estado_factura == 'REVISADO') {
+            $this->form_estado_factura = 2;
+        }
 
         // grid filtering conditions
         $query->andFilterWhere([
@@ -63,6 +69,7 @@ class FormDatosFacturacionSearch extends FormDatosFacturacion
             'form_dfecha' => $this->form_dfecha,
             'form_dfecha_visita' => $this->form_dfecha_visita,
             'form_dhora_visita' => $this->form_dhora_visita,
+            'form_estado_factura' => $this->form_estado_factura,
         ]);
 
         $query->andFilterWhere(['ilike', 'form_dnombres_completos', $this->form_dnombres_completos])
