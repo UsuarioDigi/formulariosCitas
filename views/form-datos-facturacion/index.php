@@ -17,7 +17,8 @@ $this->title = 'Información registro facturas';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<div class="container form-datos-facturacion-index">
+
+<div class="form-datos-facturacion-index">
 
     <div class="row">
         <div class="col-md-8">
@@ -31,174 +32,114 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
 
+    <p>
+       <!--<?= Html::a('Create Form Datos Facturacion', ['create'], ['class' => 'btn btn-success']) ?>-->
+    </p>
+
+    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
     <?php
-    $gridColumns = [
-        ['class' => 'yii\grid\SerialColumn'],
-        'form_dnombres_completos',
-        'form_ddireccion',
-        [
-            'attribute' => 'form_dfecha',
-            'format' => ['date', 'php:Y-m-d'],
-        ],
-        'form_dcedula',
-        'form_dtelefono',
-        'form_dcorreo',
-        [
-            'attribute' => 'form_dfecha_visita',
-            'format' => ['date', 'php:Y-m-d'],
-        ],
-        [
-            'attribute' => 'form_dhora_visita',
-            'value' => function ($model) {
-                return $model->horario->form_hnombre; // Mostrar el nombre del horario
-            },
-        ],
-        [
-            'attribute' => 'form_estado_factura',
-            'value' => function($model) {
-                switch ($model->form_estado_factura) {
-                    case 1:
-                        return 'PENDIENTE';
-                    case 2:
-                        return 'REVISADO';
-                    case 3:
-                        return 'RECHAZADO';
-                    default:
-                        return 'DESCONOCIDO'; // Manejo de caso por defecto
-                }
-            },
-            'filter' => [
-                1 => 'PENDIENTE',
-                2 => 'REVISADO',
-                3 => 'RECHAZADO',
-            ],
-        ],
-        [
-            'class' => ActionColumn::class,
-            'template' => '{view} {change-status}',
-            'buttons' => [
-                'view' => function ($url, $model, $key) {
-                    return Html::a('<span class="fa fa-eye"></span>', ['form-datos-facturacion/view', 'form_did' => $model->form_did], [
-                    'title' => Yii::t('app', 'View'),
-                    ]);
+    Pjax::begin(['id' => 'pjax-container']);
+    ?>
+    <?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
+        'rowOptions' => function($model) {
+        if ($model->form_estado_factura == 1) {
+            return ['class' => 'row-pending'];
+        } elseif ($model->form_estado_factura == 2) {
+            return ['class' => 'row-reviewed'];
+        }
+    },
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
+
+            //'form_did',
+            'form_dnombres_completos',
+            'form_ddireccion',
+            'form_dfecha',
+            'form_dcedula',
+            'form_dtelefono',
+            'form_dcorreo',
+            'form_dfecha_visita',
+            //'form_dhora_visita',
+            [
+                'attribute' => 'form_dhora_visita',
+                'value' => function ($model) {
+                    return $model->horario->form_hnombre; // Mostrar el nombre del horario
                 },
-                'change-status' => function ($url, $model, $key) {
-                    if ($model->form_estado_factura !== 3) { // Mostrar solo si el estado no es 3
+            ],
+            [
+                'attribute' => 'form_estado_factura',
+                'value' => function($model) {
+                    return $model->form_estado_factura == 1 ? 'PENDIENTE' : 'REVISADO';
+                },
+                'filter' => [
+                    1 => 'PENDIENTE',
+                    2 => 'REVISADO',
+                ],
+            ],
+            [
+                'class' => ActionColumn::class,
+                'template' => '{view}{delete}{change-status}',
+                'buttons' => [
+                    'change-status' => function ($url, $model, $key) {
                         return Html::a('<span class="fa fa-refresh"></span>', '#', [
                             'class' => 'change-status-link',
                             'data-url' => Url::to(['change-status', 'id' => $model->form_did]),
                             'data-toggle' => 'modal',
                             'data-target' => '#changeStatusModal',
                         ]);
-                    }
-                    return ''; // No mostrar nada si el estado es 3
-                },
+                    },
+                ],
+                'urlCreator' => function ($action, FormDatosFacturacion $model, $key, $index, $column) {
+                    return Url::toRoute([$action, 'form_did' => $model->form_did]);
+                 }
             ],
         ],
-    ];
-    $gridColumnsexportar = [
-        ['class' => 'yii\grid\SerialColumn'],
-        'form_dnombres_completos',
-        'form_ddireccion',
-        [
-            'attribute' => 'form_dfecha',
-            'format' => ['date', 'php:Y-m-d'],
-        ],
-        'form_dcedula',
-        'form_dtelefono',
-        'form_dcorreo',
-        [
-            'attribute' => 'form_dfecha_visita',
-            'format' => ['date', 'php:Y-m-d'],
-        ],
-        [
-            'attribute' => 'form_dhora_visita',
-            'value' => function ($model) {
-                return $model->horario->form_hnombre; // Mostrar el nombre del horario
-            },
-        ],
-        'form_dtcantidad',
-        'form_dtotal',
-        [
-            'attribute' => 'form_estado_factura',
-            'value' => function($model) {
-                switch ($model->form_estado_factura) {
-                    case 1:
-                        return 'PENDIENTE';
-                    case 2:
-                        return 'REVISADO';
-                    case 3:
-                        return 'RECHAZADO';
-                    default:
-                        return 'DESCONOCIDO'; // Manejo de caso por defecto
-                }
-            },
-        ],
-        
-    ];
-    Pjax::begin(['id' => 'pjax-container']);
-    echo ExportMenu::widget([
-        'dataProvider' => $dataProvider,
-        'columns' => $gridColumnsexportar,
-        'target' => ExportMenu::TARGET_BLANK,
-        'filename' => 'Informacion_Registro_Facturas',
-        'exportConfig' => [
-            ExportMenu::FORMAT_EXCEL => true,
-        ],
-    ]);
-    echo GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => $gridColumns,
         'summary' => 'Mostrando {begin} - {end} de {totalCount} registros',
-        'rowOptions' => function($model) {
-            switch ($model->form_estado_factura) {
-                case 1:
-                    return ['class' => 'estado-pendiente',];
-                case 2:
-                    return ['class' => 'estado-revisado'];
-                case 3:
-                    return ['class' => 'estado-rechazado'];
-                default:
-                    return [];
-            }
-        },
-    ]);
+    ]); 
     Pjax::end();
-    // Modal
-    Modal::begin([
-        'id' => 'changeStatusModal',
-        'title' => '<h4>Actualizar Estado</h4>'
-    ]);
-    echo '<div id="modalContent"></div>';
-    Modal::end();
-    $this->registerJs("
-        $(document).on('click', '.change-status-link', function(event) {
-            event.preventDefault();
-            var url = $(this).data('url');
-            $('#changeStatusModal').modal('show').find('#modalContent').load(url);
-        });
-    ");
-    $this->registerJs("
-        $(document).on('beforeSubmit', '#change-status-form', function(event) {
-            event.preventDefault();
-            var form = $(this);
-            $.ajax({
-                url: form.attr('action'),
-                type: 'post',
-                data: form.serialize(),
-                success: function(response) {
-                    if (response.success) {
-                        $('#changeStatusModal').modal('hide');
-                        $.pjax.reload({container: '#pjax-container'});
-                    } else {
-                        // Manejar errores
-                        console.log(response.errors);
-                    }
+
+// Modal
+Modal::begin([
+    'id' => 'changeStatusModal',
+    'title' => '<h4>Actualizar Estado</h4>'
+]);
+
+echo '<div id="modalContent"></div>';
+
+Modal::end();
+
+$this->registerJs("
+    $(document).on('click', '.change-status-link', function(event) {
+        event.preventDefault();
+        var url = $(this).data('url');
+        $('#changeStatusModal').modal('show').find('#modalContent').load(url);
+    });
+");
+$this->registerJs("
+    $(document).on('beforeSubmit', '#change-status-form', function(event) {
+        event.preventDefault();
+        var form = $(this);
+        $.ajax({
+            url: form.attr('action'),
+            type: 'post',
+            data: form.serialize(),
+            success: function(response) {
+                if (response.success) {
+                    $('#changeStatusModal').modal('hide');
+                    $.pjax.reload({container: '#pjax-container'});
+                } else {
+                    // Manejar errores
+                    console.log(response.errors);
                 }
-            });
-            return false;
+            }
         });
-    ");
+        return false;
+    });
+");
+
+
 ?>
 </div>
+

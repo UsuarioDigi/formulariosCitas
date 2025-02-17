@@ -62,9 +62,6 @@ class FormDatosFacturacionSearch extends FormDatosFacturacion
         } elseif ($this->form_estado_factura == 'REVISADO') {
             $this->form_estado_factura = 2;
         }
-        elseif ($this->form_estado_factura == 'RECHAZADO') {
-            $this->form_estado_factura = 2;
-        }
 
         // grid filtering conditions
         $query->andFilterWhere([
