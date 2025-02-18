@@ -20,5 +20,6 @@ return array(
     'b6b991a57620e2fb6b2f66f03fe9ddc2' => $vendorDir . '/symfony/string/Resources/functions.php',
     'f598d06aa772fa33d905e87be6398fb1' => $vendorDir . '/symfony/polyfill-intl-idn/bootstrap.php',
     'e3b2795a8a512b6083af088fb53afe6c' => $vendorDir . '/codeception/codeception/functions.php',
+    'db356362850385d08a5381de2638b5fd' => $vendorDir . '/mpdf/mpdf/src/functions.php',
     '77e7c5c0b74965caa0fbb0a094b7713f' => $vendorDir . '/codeception/verify/src/Codeception/bootstrap.php',
 );

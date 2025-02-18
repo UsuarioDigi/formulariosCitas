@@ -4,6 +4,8 @@ $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 require __DIR__ . '/constants.php';
 
+Yii::setAlias('@bootstrap5', dirname(__DIR__) . '/web/bootstrap5');
+
 $config = [
     'id' => 'basic',
     'name' => 'Reservas Patrimonio Cultural',
@@ -83,10 +85,16 @@ $config = [
                 'js' => [
                     'https://code.jquery.com/jquery-3.6.0.min.js',
                 ]
-            ],
+            ],                                                                                                
         ],
     ],
 
+    ],
+    'modules' => [
+        'gridview' => [
+            'class' => '\kartik\grid\Module',
+            // Configuraciones adicionales si es necesario
+        ],
     ],
     'params' => $params,
 ];
