@@ -7,5 +7,5 @@ return [
     'caiEmail' => 'notificacion.cai@patrimoniocultural.gob.ec',
     'contactoINPC' => '(593) 2227 927',
     'soporteCaiEmail' => 'soporte@ingapirca.com',
-
+    'bsVersion' => '5.x',
 ];
