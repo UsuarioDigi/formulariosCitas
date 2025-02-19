@@ -82,6 +82,7 @@ class FormDatosFacturacion extends \yii\db\ActiveRecord
             'form_dfecha_visita' => 'FECHA VISITA',
             'form_dhora_visita' => 'HORA VISITA',
             'form_dtotal' =>'VALOR TOTAL',
+            'form_dtcantidad'=>'TOTAL BOLETOS',
             'form_estado_factura' =>'ESTADO'
         ];
     }

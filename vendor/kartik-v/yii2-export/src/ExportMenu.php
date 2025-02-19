@@ -1759,7 +1759,7 @@ class ExportMenu extends GridView
         }
         $selector = [];
         Html::addCssClass($this->columnSelectorOptions, ['btn', $this->getDefaultBtnCss(), 'dropdown-toggle']);
-        $header = ArrayHelper::getValue($this->columnSelectorOptions, 'header', Yii::t('kvexport', 'Select Columns'));
+        $header = ArrayHelper::getValue($this->columnSelectorOptions, 'header', Yii::t('kvexport', 'Seleccione las columnas'));
         $this->columnSelectorOptions['header'] = (!isset($header) || $header === false) ? '' :
             '<li class="dropdown-header">'.$header.'</li><li class="kv-divider"></li>';
         $id = $this->options['id'].'-cols';
@@ -1777,7 +1777,7 @@ class ExportMenu extends GridView
             [
                 'id' => $id,
                 'icon' => !$this->isBs(3) ? '<i class="fas fa-list"></i>' : '<i class="glyphicon glyphicon-list"></i>',
-                'title' => Yii::t('kvexport', 'Select columns to export'),
+                'title' => Yii::t('kvexport', 'Seleccione columnas para exportar'),
                 'type' => 'button',
                 $dataToggle => 'dropdown',
                 'aria-haspopup' => 'true',
