@@ -318,7 +318,7 @@ class FormDatosFacturacionController extends Controller
         $telefono_contacto = Yii::$app->params['contactoINPC'];
 
         $lista = rtrim($listaCantidad, ", "); 
-        if($tipo_mensaje=="registro"){
+        if($tipo_mensaje == "registro"){
             $body = <<<EOT
             Estimado/a $nombre_usuario,
 
@@ -341,7 +341,7 @@ class FormDatosFacturacionController extends Controller
             Teléfono: $telefono_contacto
             EOT;
         }
-        else if($tipo_mensaje=="rev_exito")
+        else if($tipo_mensaje == "rev_exito")
         {
             $body = <<<EOT
             Estimado/a $nombre_usuario,
@@ -359,7 +359,7 @@ class FormDatosFacturacionController extends Controller
             Teléfono: $telefono_contacto
             EOT;
         }
-        else if($tipo_mensaje=="rev_rechazo")
+        else if($tipo_mensaje == "rev_rechazo")
         {
             $body = <<<EOT
             Estimado/a $nombre_usuario,
@@ -392,12 +392,8 @@ class FormDatosFacturacionController extends Controller
         
             // No redirigir dentro de esta función para evitar confusión
             // Yii::$app->session->setFlash('success', 'Correo enviado correctamente.');
-            // return $this->redirect(['index']);  // O la vista que desees
-            
-            return $result;
-        
-        
-    
+            // return $this->redirect(['index']);  // O la vista que desees            
+            return $result;    
     }
     
     public function actionFixStatus($id)

@@ -8,7 +8,7 @@ Yii::setAlias('@bootstrap5', dirname(__DIR__) . '/web/bootstrap5');
 
 $config = [
     'id' => 'basic',
-    'name' => 'Reservas Patrimonio Cultural',
+    'name' => 'Reservaciones complejo arqueológico INGAPIRCA',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
@@ -68,7 +68,7 @@ $config = [
 			'rules' => [
                 '' => 'form-datos-facturacion/create',        
 				'formdatosfacturacion/reporte' => 'form-datos-facturacion/index', 
-				'formdatosfacturacion/<id:\d+>' => 'form-datos-facturacion/view', 
+				'formdatosfacturacion/view/<form_did:\d+>' => 'form-datos-facturacion/view', 
 				'formdatosfacturacion/create' => 'form-datos-facturacion/create', 
 				'formdatosfacturacion/update/<id:\d+>' => 'form-datos-facturacion/update', 
 				'formdatosfacturacion/delete/<id:\d+>' => 'form-datos-facturacion/delete',                 

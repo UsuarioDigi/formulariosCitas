@@ -48,6 +48,21 @@ class FormDatosFacturacion extends \yii\db\ActiveRecord
             [['form_dcorreo'], 'email','message' => 'La dirección de correo no es válida.'],
             [['form_adjunto'], 'file', 'skipOnEmpty' => true],
             [['form_dtotal'], 'number'],
+            [['form_dcedula'], 'required', 'message' => 'Este campo no puede estar vacío.','when' => function($model) {
+                return $model->form_esoperadora == 1;
+            }, 'whenClient' => "function (attribute, value) {
+                return $('#formdatosfacturacion-form_esoperadora').val() == '1';
+            }"],
+            [['form_dcedula'], 'match', 'pattern' => '/^\d{13}$/', 'message' => 'El número de RUC debe contener exactamente 13 dígitos numéricos.', 'when' => function($model) {
+                return $model->form_esoperadora == 1;
+            }, 'whenClient' => "function (attribute, value) {
+                return $('#formdatosfacturacion-form_esoperadora').val() == '1';
+            }"],
+            [['form_dcedula'], 'string', 'max' => 255, 'when' => function($model) {
+                return $model->form_esoperadora != 1;
+            }, 'whenClient' => "function (attribute, value) {
+                return $('#formdatosfacturacion-form_esoperadora').val() != '1';
+            }"],
         ];
     }
 
@@ -67,6 +82,7 @@ class FormDatosFacturacion extends \yii\db\ActiveRecord
             'form_dfecha_visita' => 'FECHA VISITA',
             'form_dhora_visita' => 'HORA VISITA',
             'form_dtotal' =>'VALOR TOTAL',
+            'form_dtcantidad'=>'TOTAL BOLETOS',
             'form_estado_factura' =>'ESTADO'
         ];
     }
