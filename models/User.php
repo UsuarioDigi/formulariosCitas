@@ -14,23 +14,6 @@ class User extends ActiveRecord implements IdentityInterface
     public $authKey;
     public $accessToken;
 
-    // private static $users = [
-    //     '100' => [
-    //         'id' => '100',
-    //         'username' => 'admin',
-    //         'password' => 'admin',
-    //         'authKey' => 'test100key',
-    //         'accessToken' => '100-token',
-    //     ],
-    //     '101' => [
-    //         'id' => '101',
-    //         'username' => 'demo',
-    //         'password' => 'demo',
-    //         'authKey' => 'test101key',
-    //         'accessToken' => '101-token',
-    //     ],
-    // ];
-
     /**
      * {@inheritdoc}
      */
@@ -106,11 +89,5 @@ class User extends ActiveRecord implements IdentityInterface
     public function validatePassword($password)
     {   
        return Yii::$app->security->validatePassword($password, $this->password_hash);
-    //    $var = "";
-    //    if (Yii::$app->security->validatePassword($password, $this->password_hash)){
-    //     $var = "true";
-    //    }else
-    //    $var = "false";
-    //    return $var;
     }
 }
