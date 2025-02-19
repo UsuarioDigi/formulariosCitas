@@ -1,40 +1,12 @@
 <?php
 use yii\helpers\Html;
-
 use yii\widgets\ActiveForm;
-
 use wbraganca\dynamicform\DynamicFormWidget;
-
-
-/* @var $this yii\web\View */
-
-/* @var $modelCustomer app\modules\yii2extensions\models\Customer */
-
-/* @var $modelsAddress app\modules\yii2extensions\models\Address */
-
-$js = '
-jQuery(".dynamicform_wrapper").on("afterInsert", function(e, item) {
-
-    jQuery(".dynamicform_wrapper .panel-title-address").each(function(index) {
-        jQuery(this).html("Address: " + (index + 1))
-    });
-});
-jQuery(".dynamicform_wrapper").on("afterDelete", function(e) {
-
-    jQuery(".dynamicform_wrapper .panel-title-address").each(function(index) {
-
-        jQuery(this).html("Address: " + (index + 1))
-
-    });
-});';
-$this->registerJs($js);
-
 ?>
 <div class="customer-form">
     <?php $form = ActiveForm::begin(['id' => 'dynamic-form',
     'options' => ['enctype' => 'multipart/form-data','style' => 'width: 100%; max-width: 2000px;']]); ?>
     
-
     <div class="row">    
     <h5 class="titulo_secundario"><i class="glyphicon glyphicon-envelope"></i> DATOS DE FACTURACIÓN</h5>
     <table class="table table-bordered">

@@ -67,6 +67,11 @@ $this->params['breadcrumbs'][] = $this->title;
             'class' => ActionColumn::class,
             'template' => '{view} {change-status}',
             'buttons' => [
+                'view' => function ($url, $model, $key) {
+                    return Html::a('<span class="fa fa-eye"></span>', ['form-datos-facturacion/view', 'form_did' => $model->form_did], [
+                    'title' => Yii::t('app', 'View'),
+                    ]);
+                },
                 'change-status' => function ($url, $model, $key) {
                     if ($model->form_estado_factura !== 3) { // Mostrar solo si el estado no es 3
                         return Html::a('<span class="fa fa-refresh"></span>', '#', [
@@ -81,24 +86,56 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ],
     ];
-
+    $gridColumnsexportar = [
+        ['class' => 'yii\grid\SerialColumn'],
+        'form_dnombres_completos',
+        'form_ddireccion',
+        [
+            'attribute' => 'form_dfecha',
+            'format' => ['date', 'php:Y-m-d'],
+        ],
+        'form_dcedula',
+        'form_dtelefono',
+        'form_dcorreo',
+        [
+            'attribute' => 'form_dfecha_visita',
+            'format' => ['date', 'php:Y-m-d'],
+        ],
+        [
+            'attribute' => 'form_dhora_visita',
+            'value' => function ($model) {
+                return $model->horario->form_hnombre; // Mostrar el nombre del horario
+            },
+        ],
+        'form_dtcantidad',
+        'form_dtotal',
+        [
+            'attribute' => 'form_estado_factura',
+            'value' => function($model) {
+                switch ($model->form_estado_factura) {
+                    case 1:
+                        return 'PENDIENTE';
+                    case 2:
+                        return 'REVISADO';
+                    case 3:
+                        return 'RECHAZADO';
+                    default:
+                        return 'DESCONOCIDO'; // Manejo de caso por defecto
+                }
+            },
+        ],
+        
+    ];
     Pjax::begin(['id' => 'pjax-container']);
-
     echo ExportMenu::widget([
         'dataProvider' => $dataProvider,
-        'columns' => $gridColumns,
+        'columns' => $gridColumnsexportar,
         'target' => ExportMenu::TARGET_BLANK,
         'filename' => 'Informacion_Registro_Facturas',
         'exportConfig' => [
             ExportMenu::FORMAT_EXCEL => true,
         ],
-        'messages' => [
-            'confirmExport' => '¿Estás seguro de que deseas exportar estos datos?',
-            'downloadProgress' => 'Exportación en progreso. Por favor, espera...',
-            'downloadComplete' => 'Exportación completada. Puedes descargar el archivo ahora.'
-        ],
     ]);
-
     echo GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -107,7 +144,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'rowOptions' => function($model) {
             switch ($model->form_estado_factura) {
                 case 1:
-                    return ['class' => 'estado-pendiente'];
+                    return ['class' => 'estado-pendiente',];
                 case 2:
                     return ['class' => 'estado-revisado'];
                 case 3:
@@ -117,9 +154,7 @@ $this->params['breadcrumbs'][] = $this->title;
             }
         },
     ]);
-
     Pjax::end();
-
     // Modal
     Modal::begin([
         'id' => 'changeStatusModal',
@@ -127,7 +162,6 @@ $this->params['breadcrumbs'][] = $this->title;
     ]);
     echo '<div id="modalContent"></div>';
     Modal::end();
-
     $this->registerJs("
         $(document).on('click', '.change-status-link', function(event) {
             event.preventDefault();

@@ -112,8 +112,9 @@ a.desc:after {
 .hidden {
     display: none;
 }
-.estado-pendiente {
-    background-color: #f8d7da !important; /* Rojo claro */
+
+table.kv-grid-table .estado-pendiente {
+    background-color: #f8d7da !important; 
 }
 .estado-revisado {
     background-color: #d4edda !important; /* Verde claro */
@@ -163,4 +164,7 @@ a.desc:after {
     font-size: 12px; /* Tamaño de la letra pequeña */
     border-radius: 3px; /* Esquinas redondeadas */
     font-family: Arial, sans-serif; /* Fuente */
+}
+.kv-grid-table table .table-bordered .table-striped .kv-table-wrap{
+    background-color: #0d1469;
 }

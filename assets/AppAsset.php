@@ -19,8 +19,8 @@ class AppAsset extends AssetBundle
 {
     public $basePath = '@webroot';
     public $baseUrl = '@web';
-    public $css = [
-        'css/site.css',
+    public $css = [        
+		'css/site.css',		
     ];
     public $js = [		
 		'js/yii2-dynamic-form.js',
@@ -32,3 +32,4 @@ class AppAsset extends AssetBundle
 		'wbraganca\dynamicform\DynamicFormAsset'
     ];
 }
+?>

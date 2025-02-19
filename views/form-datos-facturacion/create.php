@@ -17,5 +17,4 @@ $this->params['breadcrumbs'][] = $this->title;*/
         'model' => $model,
         'detalleVisitantes' =>  $detalleVisitantes
     ]) ?>
-
 </div>
