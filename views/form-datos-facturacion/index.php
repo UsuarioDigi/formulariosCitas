@@ -16,10 +16,20 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="form-datos-facturacion-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <div class="row">
+        <div class="col-md-8">
+            <h1><?= Html::encode($this->title) ?></h1>            
+        </div>
+        <div class="col-md-4 text-end">
+        <?= Html::beginForm(Url::to(['site/logout']), 'post')
+            . Html::submitButton('Cerrar sesión', ['class' => 'btn btn-danger']) 
+            . Html::endForm();
+            ?>
+        </div>
+    </div>
 
     <p>
-       <!--<?= Html::a('Create Form Datos Facturacion', ['create'], ['class' => 'btn btn-success']) ?>-->
+       <!--<?= Html::a('Create Form Datos Facturacion', ['create'], ['class' => 'btn btn-success']) ?>-->       
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>

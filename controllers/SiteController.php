@@ -23,7 +23,7 @@ class SiteController extends Controller
                 'only' => ['logout'],
                 'rules' => [
                     [
-                        'actions' => ['create'],
+                        'actions' => ['logout'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -51,6 +51,7 @@ class SiteController extends Controller
                 'class' => 'yii\captcha\CaptchaAction',
                 'fixedVerifyCode' => YII_ENV_TEST ? 'testme' : null,
             ],
+            
         ];
     }
 
@@ -61,10 +62,6 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {        
-        if (Yii::$app->user->isGuest) {
-            return $this->redirect(['site/login']);
-        }
-    
         // Aquí puedes colocar el código para mostrar la vista index si el usuario está autenticado.
         return $this->render('index');
     }
@@ -75,17 +72,17 @@ class SiteController extends Controller
      * @return Response|string
      */
     public function actionLogin()
-    {
-        if (!Yii::$app->user->isGuest) {
+    {       
+        if (!Yii::$app->user->isGuest) {            
             return $this->goHome();
         }
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        }
-
-        $model->password = '';
+            return $this->redirect(['/formdatosfacturacion']);
+        } 
+        
+        $model->password = '';        
         return $this->render('login', [
             'model' => $model,
         ]);
@@ -98,6 +95,10 @@ class SiteController extends Controller
      */
     public function actionLogout()
     {
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect(['site/login']);
+        }
+        
         Yii::$app->user->logout();
 
         return $this->goHome();

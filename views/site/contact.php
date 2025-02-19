@@ -7,6 +7,7 @@
 use yii\bootstrap5\ActiveForm;
 use yii\bootstrap5\Html;
 use yii\captcha\Captcha;
+use yii\helpers\Url;
 
 $this->title = 'Contact';
 $this->params['breadcrumbs'][] = $this->title;
@@ -63,6 +64,11 @@ $this->params['breadcrumbs'][] = $this->title;
 
             </div>
         </div>
-
+<!-- Botón de Cerrar sesión -->
+<?= Html::beginForm(Url::to(['site/logout']), 'post')
+   . Html::submitButton('Cerrar sesión', ['class' => 'btn btn-danger']) 
+   . Html::endForm();
+?>
     <?php endif; ?>
+
 </div>

@@ -6,14 +6,17 @@ require __DIR__ . '/constants.php';
 
 $config = [
     'id' => 'basic',
-    'name' => 'Citas y visitas',
+    'name' => 'Reservas Patrimonio Cultural',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
-    'components' => [
+    'components' => [        
+        'security' => [
+            'class' => 'yii\base\Security',
+        ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'G_J77T6UC3gFOnb1dr3YwnjCRFup_DLa',
@@ -24,6 +27,15 @@ $config = [
         'user' => [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
+            'identityCookie' => ['name' => '_identity', 'httpOnly' => true],
+        ],
+        'session' => [
+            'class' => 'yii\web\Session',
+            'timeout' => 86400, // 24 horas
+            'cookieParams' => [
+                'httponly' => true,
+                ],
+            'useCookies' => true,
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',

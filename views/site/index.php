@@ -3,6 +3,9 @@
 /** @var yii\web\View $this */
 
 $this->title = 'My Yii Application';
+use yii\helpers\Html;
+use yii\helpers\Url;
+
 ?>
 <div class="site-index">
 
@@ -49,5 +52,10 @@ $this->title = 'My Yii Application';
             </div>
         </div>
 
+<!-- Botón de Cerrar sesión -->
+<?= Html::beginForm(Url::to(['site/logout']), 'post')
+   . Html::submitButton('Cerrar sesión', ['class' => 'btn btn-danger']) 
+   . Html::endForm();
+?>
     </div>
 </div>
