@@ -9,7 +9,6 @@ use yii\bootstrap5\ActiveForm;
 use yii\bootstrap5\Html;
 
 $this->title = 'Inicio de Sesión';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <section class="vh-100">
   <div class="container-fluid">

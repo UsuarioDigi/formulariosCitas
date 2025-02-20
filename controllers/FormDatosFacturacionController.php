@@ -30,7 +30,7 @@ class FormDatosFacturacionController extends Controller
         return array_merge(
             parent::behaviors(),
             [
-                
+
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
@@ -49,15 +49,15 @@ class FormDatosFacturacionController extends Controller
     {      
         $searchModel = new FormDatosFacturacionSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
-
-        // if (Yii::$app->user->isGuest) {           
-        //     return $this->redirect(['site/login']);
-        // }
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+     
+        if (Yii::$app->session->has('formdatosfacturacionReporte')) {
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        } else {
+            return $this->redirect(['site/login']);
+        }
     }
 
     /**
@@ -70,6 +70,7 @@ class FormDatosFacturacionController extends Controller
     {          
         $modelFacturacion = $this->findModel($form_did);
         $modelVisitante = FormDatosVisitante::find()->where(['form_did' => $form_did])->all();
+
         
         return $this->render('view', [
             'modelFacturacion' => $modelFacturacion,

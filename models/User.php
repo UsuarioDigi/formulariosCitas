@@ -9,7 +9,7 @@ use yii\web\IdentityInterface;
 class User extends ActiveRecord implements IdentityInterface
 {
     public $id;
-    public $username;
+    public $usuariosname;
     public $password;
     public $authKey;
     public $accessToken;
@@ -27,7 +27,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findIdentity($id)
     {
-        return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
+        return static::findOne($id);
     }
 
     /**
@@ -47,12 +47,12 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * Finds user by username
      *
-     * @param string $username
+     * @param string $usuariosname
      * @return static|null
      */
-    public static function findByUsername($username)
+    public static function findByUsername($usuariosname)
     {
-        return static::findOne(['usuariosname' => $username]);
+        return static::findOne(['usuariosname' => $usuariosname]);
     }
 
     /**
@@ -67,7 +67,7 @@ class User extends ActiveRecord implements IdentityInterface
      * {@inheritdoc}
      */
     public function getAuthKey()
-    {
+    {       
         return $this->auth_key ;
     }
 
@@ -87,7 +87,7 @@ class User extends ActiveRecord implements IdentityInterface
      * Yii::$app->security->generatePasswordHash("123456"); generar hash
      */
     public function validatePassword($password)
-    {   
+    {               
        return Yii::$app->security->validatePassword($password, $this->password_hash);
     }
 }

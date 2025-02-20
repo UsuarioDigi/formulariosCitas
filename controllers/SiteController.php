@@ -17,18 +17,7 @@ class SiteController extends Controller
      */
     public function behaviors()
     {
-        return [
-            'access' => [
-                'class' => AccessControl::class,
-                'only' => ['logout'],
-                'rules' => [
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
+        return [         
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
@@ -78,11 +67,12 @@ class SiteController extends Controller
         }
 
         $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->redirect(['/formdatosfacturacion']);
+        if ($model->load(Yii::$app->request->post()) && $model->login()) {     
+            Yii::$app->session->set('formdatosfacturacionReporte', 'admin');      
+            return $this->redirect(['/formdatosfacturacion/reporte']);        
         } 
         
-        $model->password = '';        
+        $model->password = '';             
         return $this->render('login', [
             'model' => $model,
         ]);
@@ -95,9 +85,11 @@ class SiteController extends Controller
      */
     public function actionLogout()
     {
+        Yii::$app->session->destroy();
         if (Yii::$app->user->isGuest) {
             return $this->redirect(['site/login']);
         }
+    
         
         Yii::$app->user->logout();
 

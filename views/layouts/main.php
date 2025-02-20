@@ -70,9 +70,11 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 </header>
 <main id="main" class="flex-shrink-0" role="main">
     <div class="container">
-    <div class="banner">
-        <img src="<?= Url::to('@web/images/banner.jpg') ?>" alt="Banner" class="img-responsive">
-    </div>
+    <?php if (!(Yii::$app->controller->id === 'site' && Yii::$app->controller->action->id === 'login')): ?>
+        <div class="banner">
+            <img src="<?= Url::to('@web/images/banner.jpg') ?>" alt="Banner" class="img-responsive">
+        </div>
+    <?php endif; ?>
         <?php if (!empty($this->params['breadcrumbs'])): ?>
             <?= Breadcrumbs::widget(['links' => $this->params['breadcrumbs']]) ?>
         <?php endif ?>
