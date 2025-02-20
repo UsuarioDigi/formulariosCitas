@@ -17,7 +17,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1>Registro #<?= Html::encode($this->title) ?></h1>
 
 
-
+    <h3>Información de la facturación</h3>
     <?= DetailView::widget([
         'model' => $modelFacturacion,
         'attributes' => [
