@@ -358,7 +358,7 @@ class FormDatosFacturacionController extends Controller
 
             Por medio de la presente, le notificamos que posterior a la validación, se RECHAZA su compra de boletos para el **Complejo Arqueológico Ingapirca**.
             
-            Agradecemos revisar la transferencia/depósitos realizados, ya que en nuestros sitemas no se registra el comprobante enviado.
+            Agradecemos revisar la transferencia/depósitos realizados, ya que en nuestros sistemas no se registra el comprobante enviado.
             
             Si requiere asistencia o tiene alguna inquietud, no dude en contactarnos al teléfono $telefono_contacto.
             

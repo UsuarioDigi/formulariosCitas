@@ -2,9 +2,9 @@
 
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'pgsql:host=localhost;port=5432;dbname=formularios_citas',
-    'username' => 'postgres',
-    'password' => '1724',
+    'dsn' => 'pgsql:host=172.16.1.41;port=5432;dbname=formularios_citas',
+    'username' => 'sistemas',
+    'password' => 'temporal123',
     'charset' => 'utf8',
 ];
 

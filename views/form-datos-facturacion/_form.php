@@ -157,6 +157,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
         INFORMACIÓN BANCARIA<br/>
         BENEFICIARIO: INSTITUTO NACIONAL DE PATRIMONIO CULTURAL<br/>
         CUENTA CORRIENTE: 2100010305<br/>
+        SUBLÍNEA 30200<br/>
         BANCO: BANCO PICHINCHA<br/>
         RUC: 1760006000001<br/>
         EMAIL: recaudacion@patrimoniocultural.gob.ec<br/>
