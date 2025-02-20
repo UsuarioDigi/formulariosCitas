@@ -2,7 +2,6 @@
 
 namespace app\controllers;
 
-use yii\filters\AccessControl;
 use app\models\FormTipoVisitante;
 use Yii;
 use app\models\FormDatosFacturacion;
@@ -30,7 +29,6 @@ class FormDatosFacturacionController extends Controller
         return array_merge(
             parent::behaviors(),
             [
-
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
@@ -39,25 +37,22 @@ class FormDatosFacturacionController extends Controller
                 ],
             ]
         );
-    }   
+    }
+
     /**
      * Lists all FormDatosFacturacion models.
      *
      * @return string
      */
     public function actionIndex()
-    {      
+    {
         $searchModel = new FormDatosFacturacionSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
-     
-        if (Yii::$app->session->has('formdatosfacturacionReporte')) {
-            return $this->render('index', [
-                'searchModel' => $searchModel,
-                'dataProvider' => $dataProvider,
-            ]);
-        } else {
-            return $this->redirect(['site/login']);
-        }
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
     /**
@@ -67,11 +62,9 @@ class FormDatosFacturacionController extends Controller
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($form_did)
-    {          
+    {
         $modelFacturacion = $this->findModel($form_did);
         $modelVisitante = FormDatosVisitante::find()->where(['form_did' => $form_did])->all();
-
-        
         return $this->render('view', [
             'modelFacturacion' => $modelFacturacion,
             'modelVisitante' => $modelVisitante,
@@ -102,7 +95,7 @@ class FormDatosFacturacionController extends Controller
         Yii::info("Validación de modelos completada 1: " . $valid);
         $validDetalles = DynamicModel::validateMultiple($detalleVisitantes);
         Yii::info("Validación de modelos completada 2: " . $validDetalles);
-       
+
         foreach ($detalleVisitantes as $detalleVisitante) {
             if (!$detalleVisitante->validate()) {
                 //Yii::error("Errores en la validación del detalle: " . print_r($detalleVisitante->errors, true));
@@ -113,9 +106,7 @@ class FormDatosFacturacionController extends Controller
             $transaction = \Yii::$app->db->beginTransaction();
 
             try {
-                // Obtener ip del cliente
-                $model->form_ip = Yii::$app->request->userIP;
-                
+                $model->form_estado_factura=1;
                 if ($model->save(false)) {
                     Yii::info("form_did asignado: " . $model->form_did);
 
@@ -358,7 +349,7 @@ class FormDatosFacturacionController extends Controller
 
             Por medio de la presente, le notificamos que posterior a la validación, se RECHAZA su compra de boletos para el **Complejo Arqueológico Ingapirca**.
             
-            Agradecemos revisar la transferencia/depósitos realizados, ya que en nuestros sitemas no se registra el comprobante enviado.
+            Agradecemos revisar la transferencia/depósitos realizados, ya que en nuestros sistemas no se registra el comprobante enviado.
             
             Si requiere asistencia o tiene alguna inquietud, no dude en contactarnos al teléfono $telefono_contacto.
             
