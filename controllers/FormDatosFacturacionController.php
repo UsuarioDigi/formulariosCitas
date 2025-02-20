@@ -106,6 +106,8 @@ class FormDatosFacturacionController extends Controller
             $transaction = \Yii::$app->db->beginTransaction();
 
             try {
+                // Obtener ip del cliente
+                $model->form_ip = Yii::$app->request->userIP;
                 $model->form_estado_factura=1;
                 if ($model->save(false)) {
                     Yii::info("form_did asignado: " . $model->form_did);
@@ -284,7 +286,7 @@ class FormDatosFacturacionController extends Controller
     {
         $subject = EMAIL_SUBJECT;
         $nombre_usuario = $model->form_dnombres_completos;
-        $fecha_compra = $model->form_dfecha;
+        $fecha_compra = date('Y-m-d H:i:s');
         $listaCantidad = "";
         $totalCantidad = 0;
         if($detalleVisitantes!=null){

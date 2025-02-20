@@ -20,6 +20,7 @@ use Yii;
  * @property int $form_esoperadora
  * @property int $form_dtcantidad
  * @property int $form_estado_factura
+ * @property string $form_ip
  */
 class FormDatosFacturacion extends \yii\db\ActiveRecord
 {
