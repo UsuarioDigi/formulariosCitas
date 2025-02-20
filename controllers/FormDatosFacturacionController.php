@@ -387,34 +387,48 @@ class FormDatosFacturacionController extends Controller
             'model' => $model,
         ]);
     }
-    public function actionFixStatus($id)
+    public function actionFixStatus()
     {
-      Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-      $model = $this->findModel($id);
-  
-      if (Yii::$app->request->isAjax && $model->load(Yii::$app->request->post())) {
-          $model->form_estado_factura = Yii::$app->request->post('FormDatosFacturacion')['form_estado_factura'];
-          if ($model->save(false, ['form_estado_factura'])) {
-            /*Validacion si es rechazado el registro*/
-            if($model->form_estado_factura==3) {/*Estado 3 es rechazado. Actualiza el estado de la información de la cita a 2 que indica que no se tome en cuenta en la asignación de cupos disponibles, se envía correo indicando que se rechaza*/
+    Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+    $id= Yii::$app->request->post('id'); // Cambiado a 'get'      
+    $val_estado = Yii::$app->request->post('val_estado');            
+    $model = $this->findModel($id);
+    
+    Yii::info('Se ha llamado a actionFixStatus', __METHOD__);
+
+    
+        $model->form_estado_factura =  $val_estado;
+        // Bloqueo para evitar envío múltiple de correos
+        $sendNotification = false;
+
+        if ($model->save(false, ['form_estado_factura'])) {
+            Yii::info('Modelo guardado exitosamente', __METHOD__);
+
+            if ($model->form_estado_factura == 3) { // Estado 3 es rechazado
                 $relatedModel = FormDatosCitas::findOne(['form_did' => $model->form_did]);
                 if ($relatedModel !== null) {
                     $relatedModel->form_dcestado = 2;
                     if (!$relatedModel->save(false, ['form_dcestado'])) {
                         return ['success' => false, 'errors' => $relatedModel->errors];
+                    } else {
+                        $sendNotification = "rev_rechazo";
                     }
-                    else 
-                        $this-> actionSendNotification($model, "","rev_rechazo");
                 } else {
                     return ['success' => false, 'errors' => 'Modelo relacionado no encontrado.'];
                 }
+            } else if ($model->form_estado_factura == 2) { // Estado 2 es revisado
+                $sendNotification = "rev_exito";
             }
-            else if($model->form_estado_factura==2) { /*Estado 2 es revisado. Solo envía notificación indicando que se validó */
-                $this-> actionSendNotification($model, "","rev_exito");
+
+            if ($sendNotification) {
+                Yii::info('Enviando notificación: ' . $sendNotification, __METHOD__);
+                $this->actionSendNotification($model, "", $sendNotification);
             }
-              return ['success' => true];
-          }
-      }      
-      return ['success' => false, 'errors' => $model->errors];
-    }       
+            
+            return ['success' => true];
+        }
+    
+    
+    }
+
 }

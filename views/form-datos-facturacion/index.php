@@ -163,32 +163,18 @@ $this->params['breadcrumbs'][] = $this->title;
     echo '<div id="modalContent"></div>';
     Modal::end();
     $this->registerJs("
-        $(document).on('click', '.change-status-link', function(event) {
-            event.preventDefault();
-            var url = $(this).data('url');
-            $('#changeStatusModal').modal('show').find('#modalContent').load(url);
-        });
-    ");
-    $this->registerJs("
-        $(document).on('beforeSubmit', '#change-status-form', function(event) {
-            event.preventDefault();
-            var form = $(this);
-            $.ajax({
-                url: form.attr('action'),
-                type: 'post',
-                data: form.serialize(),
-                success: function(response) {
-                    if (response.success) {
-                        $('#changeStatusModal').modal('hide');
-                        $.pjax.reload({container: '#pjax-container'});
-                    } else {
-                        // Manejar errores
-                        console.log(response.errors);
-                    }
-                }
-            });
-            return false;
-        });
-    ");
+    $(document).on('click', '.change-status-link', function(event) {
+        event.preventDefault();
+        var url = $(this).data('url');
+        $('#changeStatusModal').modal('show').find('#modalContent').load(url);
+    });
+
+
+    // Manejar el envío del formulario sólo al hacer clic en el botón Guardar
+    $(document).on('statusChanged', function(event) {
+        $('#changeStatusModal').modal('hide');
+        $.pjax.reload({container: '#pjax-container'});
+    });
+");
 ?>
 </div>

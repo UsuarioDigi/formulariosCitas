@@ -21,13 +21,6 @@ $(document).ready(function() {
         }
     });
 });
-$(document).on('click', '.change-status-link', function () {
-    var url = $(this).data('url');
-    $.get(url, function (data) {
-        $('#modalContent').html(data);
-    });
-});
-
 function poblarTarifario(campo) {
     var valor_campo = campo.value;
     var id_campo = campo.id;
