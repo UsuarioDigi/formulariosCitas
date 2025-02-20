@@ -73,16 +73,26 @@ $this->params['breadcrumbs'][] = $this->title;
                     ]);
                 },
                 'change-status' => function ($url, $model, $key) {
-                    if ($model->form_estado_factura !== 3) { // Mostrar solo si el estado no es 3
-                        return Html::a('<span class="fa fa-refresh"></span>', '#', [
-                            'class' => 'change-status-link',
-                            'data-url' => Url::to(['change-status', 'id' => $model->form_did]),
-                            'data-toggle' => 'modal',
-                            'data-target' => '#changeStatusModal',
-                        ]);
-                    }
-                    return ''; // No mostrar nada si el estado es 3
-                },
+                $dateToday = new DateTime();
+                $formDate = DateTime::createFromFormat('Y-m-d', $model->form_dfecha_visita);
+
+    if ($model->form_estado_factura !== 3) {                
+        // Convertir fechas a cadenas antes de comparar
+        $dateTodayStr = $dateToday->format('Y-m-d');
+        $formDateStr = $formDate->format('Y-m-d');
+
+        if ($formDateStr >= $dateTodayStr) {            
+            return Html::a('<span class="fa fa-refresh"></span>', '#', [
+                'class' => 'change-status-link',
+                'data-url' => Url::to(['change-status', 'id' => $model->form_did]),
+                'data-toggle' => 'modal',
+                'data-target' => '#changeStatusModal',
+            ]);
+        }              
+    }         
+    return ''; // No mostrar nada si el estado es 3 o la fecha es menor que hoy
+},
+
             ],
         ],
     ];
@@ -176,5 +186,6 @@ $this->params['breadcrumbs'][] = $this->title;
         $.pjax.reload({container: '#pjax-container'});
     });
 ");
+
 ?>
 </div>
