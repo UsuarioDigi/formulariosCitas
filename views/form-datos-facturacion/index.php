@@ -23,12 +23,6 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="col-md-8">
             <h1><?= Html::encode($this->title) ?></h1>            
         </div>
-        <div class="col-md-4 text-end">
-        <?= Html::beginForm(Url::to(['site/logout']), 'post')
-            . Html::submitButton('Cerrar sesión', ['class' => 'btn btn-danger']) 
-            . Html::endForm();
-            ?>
-        </div>
     </div>
 
     <?php

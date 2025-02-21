@@ -27,7 +27,7 @@ class LoginForm extends Model
     {
         return [
             // username and password are both required
-            [['username', 'password'], 'required'],
+            [['username', 'password'], 'required',"message"=>"El campo no debe estar vacío"],
             // rememberMe must be a boolean value
             ['rememberMe', 'boolean'],
             // password is validated by validatePassword()
@@ -58,13 +58,21 @@ class LoginForm extends Model
      * @return bool whether the user is logged in successfully
      */
     public function login()
-    {
-        if ($this->validate()) {
-           //return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);
-           return Yii::$app->user->login($this->getUser(), 3600*24*30);
-        }
-        return false;
+{
+    if ($this->validate()) {
+        Yii::debug('Usuario validado correctamente', __METHOD__);
+        $user = $this->getUser();
+        Yii::debug('Usuario obtenido: ' . print_r($user, true), __METHOD__);
+
+        $loggedIn = Yii::$app->user->login($user, $this->rememberMe ? 3600 * 24 * 30 : 0);
+        Yii::debug('Estado de inicio de sesión: ' . ($loggedIn ? 'exitoso' : 'fallido'), __METHOD__);
+
+        return $loggedIn;
     }
+    Yii::debug('Fallo en la validación del usuario', __METHOD__);
+    return false;
+}
+
 
     /**
      * Finds user by [[username]]

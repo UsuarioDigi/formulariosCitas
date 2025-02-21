@@ -11,6 +11,7 @@ use app\models\FormDatosVisitante;
 use app\models\FormDatosCitas;
 use app\models\DynamicModel;
 use app\models\FormHorarios;
+use app\models\User;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -26,19 +27,25 @@ class FormDatosFacturacionController extends Controller
      * @inheritDoc
      */
     public function behaviors()
-    {
-        return array_merge(
-            parent::behaviors(),
-            [
-
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
+    {                        
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'only' => ['index'], // Aplica el control de acceso solo a 'index'
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['index'],
+                        'roles' => ['@'], // Solo usuarios autenticados pueden acceder a 'index'
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['create'], // Permitir acceso a 'create' para todos
+                        'roles' => ['?'], // ? significa cualquier usuario, incluido los no autenticados
                     ],
                 ],
-            ]
-        );
+            ],
+        ];                                              
     }   
     /**
      * Lists all FormDatosFacturacion models.
@@ -46,19 +53,21 @@ class FormDatosFacturacionController extends Controller
      * @return string
      */
     public function actionIndex()
-    {      
-        $searchModel = new FormDatosFacturacionSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
-     
-        if (Yii::$app->session->has('formdatosfacturacionReporte')) {
-            return $this->render('index', [
-                'searchModel' => $searchModel,
-                'dataProvider' => $dataProvider,
-            ]);
-        } else {
-            return $this->redirect(['site/login']);
-        }
-    }
+{
+    Yii::debug('Estado de autenticación: ' . (Yii::$app->user->isGuest ? 'No autenticado' : 'Autenticado'), __METHOD__);
+    Yii::debug('ID de usuario autenticado: ' . Yii::$app->user->id, __METHOD__);
+
+    $searchModel = new FormDatosFacturacionSearch();
+    $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+    return $this->render('index', [
+        'searchModel' => $searchModel,
+        'dataProvider' => $dataProvider,
+    ]);
+}
+    
+    
+    
 
     /**
      * Displays a single FormDatosFacturacion model.
@@ -431,9 +440,11 @@ class FormDatosFacturacionController extends Controller
             }
             
             return ['success' => true];
-        }
-    
-    
+        }        
+    }
+    public function actionReporte()
+    {        
+        return $this->redirect(['index']);
     }
 
 }

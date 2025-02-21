@@ -21,6 +21,23 @@ $(document).ready(function() {
         }
     });
 });
+document.addEventListener('DOMContentLoaded', function() {
+    var input = document.getElementById('fecha-visita');
+
+    input.addEventListener('input', function() {
+        var date = new Date(this.value);
+        var day = date.getUTCDay();
+
+        // 1 es lunes y 2 es martes
+        if (day === 1 || day === 2) {
+            this.setCustomValidity('Los días lunes y martes no están disponibles para la visita.');
+            this.reportValidity();
+            this.value = ''; // Restablece el valor del campo de fecha
+        } else {
+            this.setCustomValidity(''); // Restaura el estado normal si no es lunes ni martes
+        }
+    });
+});
 function poblarTarifario(campo) {
     var valor_campo = campo.value;
     var id_campo = campo.id;

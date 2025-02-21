@@ -19,6 +19,11 @@ $config = [
         'security' => [
             'class' => 'yii\base\Security',
         ],
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager', // Asegúrate de que esto está configurado
+            'defaultRoles' => ['guest'], // Opcional: Define roles predeterminados si es necesario
+            'db' => 'db',
+        ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'G_J77T6UC3gFOnb1dr3YwnjCRFup_DLa',
@@ -27,7 +32,7 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\models\User',
+            'identityClass' => 'app\models\User', // Asegúrate de que este es tu modelo de usuario
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity', 'httpOnly' => true],
         ],

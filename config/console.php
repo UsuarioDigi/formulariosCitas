@@ -14,6 +14,11 @@ $config = [
         '@tests' => '@app/tests',
     ],
     'components' => [
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
+            'defaultRoles' => ['guest'],
+            'db' => 'db', // Asegúrate de que este valor apunte a la conexión de base de datos correcta
+        ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
