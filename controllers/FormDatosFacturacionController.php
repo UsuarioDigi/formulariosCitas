@@ -125,7 +125,8 @@ class FormDatosFacturacionController extends Controller
                 // Obtener ip del cliente
                 $model->form_ip = Yii::$app->request->userIP;
                 $model->form_estado_factura=1;
-                
+                $model->form_fecha_registro = date('Y-m-d H:i:s');;
+
                 if ($model->save(false)) {
                     Yii::info("form_did asignado: " . $model->form_did);
 
@@ -410,13 +411,16 @@ class FormDatosFacturacionController extends Controller
     $model = $this->findModel($id);
     
     Yii::info('Se ha llamado a actionFixStatus', __METHOD__);
-
+    
     
         $model->form_estado_factura =  $val_estado;
+        // auditoria
+        $model->form_usuario =  Yii::$app->user->identity->username;
+        $model->form_fecha_actualiza =  date('Y-m-d H:i:s');
         // Bloqueo para evitar envío múltiple de correos
         $sendNotification = false;
-
-        if ($model->save(false, ['form_estado_factura'])) {
+        
+        if ($model->save(false, ['form_estado_factura','form_usuario','form_fecha_actualiza'])) {
             Yii::info('Modelo guardado exitosamente', __METHOD__);
 
             if ($model->form_estado_factura == 3) { // Estado 3 es rechazado

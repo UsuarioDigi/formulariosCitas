@@ -21,6 +21,9 @@ use Yii;
  * @property int $form_dtcantidad
  * @property int $form_estado_factura
  * @property string $form_ip
+ * @property string $form_fecha_registro
+ * @property string $form_usuario
+ * @property string $form_fecha_actualiza
  */
 class FormDatosFacturacion extends \yii\db\ActiveRecord
 {
