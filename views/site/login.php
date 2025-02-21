@@ -21,13 +21,13 @@ $this->title = 'Inicio de Sesión';
         </div>
         <div class="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-0 pt-0 pt-xl-0 mt-xl-n5">
             
-            <?php $form = ActiveForm::begin(); ?>
+            <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>            
                 <h3 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;"><?= Html::encode($this->title) ?></h3>
-                <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
-                <?= $form->field($model, 'password')->passwordInput() ?>
+                <?= $form->field($model, 'username')->textInput(['autofocus' => true])->label("Usuario") ?>
+                <?= $form->field($model, 'password')->passwordInput()->label("Contraseña") ?>
                 <?= $form->field($model, 'rememberMe')->checkbox([
                     'template' => "<div class=\"custom-control custom-checkbox\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>",
-                ]) ?>
+                ])->label("Recordarme")?>
                 <div class="form-group">
                     <div>
                         <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>

@@ -1,62 +1,59 @@
 <?php
-
 namespace app\models;
-use Yii;
+
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
+use Yii;
 
-//class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
 class User extends ActiveRecord implements IdentityInterface
 {
-    public $id;
-    public $usuariosname;
-    public $password;
-    public $authKey;
-    public $accessToken;
-
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
-        return 'usuarios'; 
+        return 'usuarios'; // Nombre de la tabla en la base de datos
     }
 
     /**
-     * {@inheritdoc}
+     * Encuentra la identidad de un usuario por su ID.
+     *
+     * @param int|string $id
+     * @return IdentityInterface|null
      */
     public static function findIdentity($id)
     {
-        return static::findOne($id);
+        return self::findOne($id);
     }
 
     /**
-     * {@inheritdoc}
+     * Encuentra la identidad de un usuario por su token de acceso.
+     * Nota: Este método no se implementa en este ejemplo.
+     *
+     * @param string $token
+     * @param null|string $type
+     * @return IdentityInterface|null
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        foreach (self::$users as $user) {
-            if ($user['accessToken'] === $token) {
-                return new static($user);
-            }
-        }
-
-        return null;
+        return null; // No implementado
     }
 
     /**
-     * Finds user by username
+     * Encuentra un usuario por su nombre de usuario.
      *
-     * @param string $usuariosname
+     * @param string $username
      * @return static|null
      */
-    public static function findByUsername($usuariosname)
+    public static function findByUsername($username)
     {
-        return static::findOne(['usuariosname' => $usuariosname]);
+        return self::findOne(['username' => $username]);
     }
 
     /**
-     * {@inheritdoc}
+     * Obtiene el ID del usuario.
+     *
+     * @return int|string
      */
     public function getId()
     {
@@ -64,30 +61,52 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Obtiene la clave de autenticación del usuario.
+     *
+     * @return string
      */
     public function getAuthKey()
-    {       
-        return $this->auth_key ;
+    {
+        return $this->auth_key;
     }
 
     /**
-     * {@inheritdoc}
+     * Valida la clave de autenticación.
+     *
+     * @param string $authKey
+     * @return bool
      */
     public function validateAuthKey($authKey)
     {
-        return $this->auth_key  === $authKey;
+        return $this->auth_key === $authKey;
     }
 
     /**
-     * Validates password
+     * Valida la contraseña del usuario.
      *
-     * @param string $password password to validate
-     * @return bool if password provided is valid for current user
-     * Yii::$app->security->generatePasswordHash("123456"); generar hash
+     * @param string $password
+     * @return bool
      */
     public function validatePassword($password)
-    {               
-       return Yii::$app->security->validatePassword($password, $this->password_hash);
+    {
+        return Yii::$app->security->validatePassword($password, $this->password_hash);
+    }
+
+    /**
+     * Establece la contraseña del usuario.
+     *
+     * @param string $password
+     */
+    public function setPassword($password)
+    {
+        $this->password_hash = Yii::$app->security->generatePasswordHash($password);
+    }
+
+    /**
+     * Genera una nueva clave de autenticación.
+     */
+    public function generateAuthKey()
+    {
+        $this->auth_key = Yii::$app->security->generateRandomString();
     }
 }

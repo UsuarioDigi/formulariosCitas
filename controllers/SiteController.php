@@ -17,7 +17,18 @@ class SiteController extends Controller
      */
     public function behaviors()
     {
-        return [         
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'only' => ['logout'],
+                'rules' => [
+                    [
+                        'actions' => ['logout'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
@@ -61,23 +72,26 @@ class SiteController extends Controller
      * @return Response|string
      */
     public function actionLogin()
-    {       
-        if (!Yii::$app->user->isGuest) {            
-            return $this->goHome();
-        }
-
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {     
-            Yii::$app->session->set('formdatosfacturacionReporte', 'admin');      
-            return $this->redirect(['/formdatosfacturacion/reporte']);        
-        } 
-        
-        $model->password = '';             
-        return $this->render('login', [
-            'model' => $model,
-        ]);
+{
+    if (!Yii::$app->user->isGuest) {
+        return $this->goHome();
     }
 
+    $model = new LoginForm();
+    if ($model->load(Yii::$app->request->post()) && $model->login()) {
+        Yii::debug('Inicio de sesión exitoso', __METHOD__);
+        Yii::debug('Usuario autenticado: ' . Yii::$app->user->identity->username, __METHOD__);
+        Yii::debug('ID de usuario autenticado: ' . Yii::$app->user->id, __METHOD__);
+        return $this->redirect(['formdatosfacturacion/reporte']); // Redirigir a la URL personalizada
+    } else {
+        Yii::debug('Error en el inicio de sesión', __METHOD__);
+    }
+
+    $model->password = '';
+    return $this->render('login', [
+        'model' => $model,
+    ]);
+}
     /**
      * Logout action.
      *
@@ -93,7 +107,7 @@ class SiteController extends Controller
         
         Yii::$app->user->logout();
 
-        return $this->goHome();
+        return $this->redirect(['site/login']);
     }
 
     /**

@@ -53,7 +53,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
             <td colspan="3"><?=  $form->field($model, 'form_dcorreo')->input('email', ['maxlength' => false,'required'=>true])->label(false)?></td>
         </tr>
         <tr>
-            <td>FECHA DE VISITA:</td><td><?= $form->field($model, 'form_dfecha_visita',['inputOptions' => ['type'=>'date','required'=>true,"onchange"=>'poblarHorarios(this);','min'=>date('Y-m-d')]])->textInput()->label(false) ?> </td>    
+            <td>FECHA DE VISITA:</td><td><?= $form->field($model, 'form_dfecha_visita',['inputOptions' => ['type'=>'date','required'=>true,"onchange"=>'poblarHorarios(this);','min'=>date('Y-m-d'),'id' => 'fecha-visita',]])->textInput()->label(false) ?> </td>    
             <td>HORA DE VISITA:</td><td><?= $form->field($model, 'form_dhora_visita')->dropDownList([], ["prompt"=>"Seleccione una opción",'required'=>true,"onchange"=>'poblarTarifario(this);'])->label(false) ?>
         <p class="warning-message">Para el ingreso debe presentarse 10 minutos antes</p></td>
         </tr>
