@@ -46,6 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
         [
             'attribute' => 'form_dfecha_visita',
             'format' => ['date', 'php:Y-m-d'],
+            'enableSorting' => true,
         ],
         [
             'attribute' => 'form_dhora_visita',

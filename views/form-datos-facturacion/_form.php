@@ -162,7 +162,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
         RUC: 1760006000001<br/>
         EMAIL: recaudacion@patrimoniocultural.gob.ec<br/>
         </p>
-
+        <p class="warning-message">Por favor asegúrese de cargar el documento correcto</p>
         <?= $form->field($model, 'form_adjunto')->fileInput()->label('COMPROBANTE DE PAGO') ?>
         </div>
         </div>
