@@ -47,6 +47,11 @@ class FormDatosFacturacionSearch extends FormDatosFacturacion
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort' => [
+            'defaultOrder' => [
+                'form_dfecha_visita' => SORT_ASC // o SORT_ASC
+            ]
+        ],
         ]);
 
         $this->load($params);

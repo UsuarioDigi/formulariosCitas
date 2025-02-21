@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use yii\filters\AccessControl;
 use app\models\FormTipoVisitante;
 use Yii;
 use app\models\FormDatosFacturacion;
@@ -29,6 +30,7 @@ class FormDatosFacturacionController extends Controller
         return array_merge(
             parent::behaviors(),
             [
+
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [
@@ -37,22 +39,25 @@ class FormDatosFacturacionController extends Controller
                 ],
             ]
         );
-    }
-
+    }   
     /**
      * Lists all FormDatosFacturacion models.
      *
      * @return string
      */
     public function actionIndex()
-    {
+    {      
         $searchModel = new FormDatosFacturacionSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+     
+        if (Yii::$app->session->has('formdatosfacturacionReporte')) {
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+            ]);
+        } else {
+            return $this->redirect(['site/login']);
+        }
     }
 
     /**
@@ -62,9 +67,11 @@ class FormDatosFacturacionController extends Controller
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($form_did)
-    {
+    {          
         $modelFacturacion = $this->findModel($form_did);
         $modelVisitante = FormDatosVisitante::find()->where(['form_did' => $form_did])->all();
+
+        
         return $this->render('view', [
             'modelFacturacion' => $modelFacturacion,
             'modelVisitante' => $modelVisitante,
@@ -95,7 +102,7 @@ class FormDatosFacturacionController extends Controller
         Yii::info("Validación de modelos completada 1: " . $valid);
         $validDetalles = DynamicModel::validateMultiple($detalleVisitantes);
         Yii::info("Validación de modelos completada 2: " . $validDetalles);
-
+       
         foreach ($detalleVisitantes as $detalleVisitante) {
             if (!$detalleVisitante->validate()) {
                 //Yii::error("Errores en la validación del detalle: " . print_r($detalleVisitante->errors, true));
@@ -106,7 +113,9 @@ class FormDatosFacturacionController extends Controller
             $transaction = \Yii::$app->db->beginTransaction();
 
             try {
-                $model->form_estado_factura=1;
+                // Obtener ip del cliente
+                $model->form_ip = Yii::$app->request->userIP;
+                
                 if ($model->save(false)) {
                     Yii::info("form_did asignado: " . $model->form_did);
 
@@ -297,7 +306,7 @@ class FormDatosFacturacionController extends Controller
             $cantidad_boletos = $totalCantidad;
             $monto_total = $model->form_dtotal;
         }
-        $telefono_contacto = Yii::$app->params['contactoINPC'];
+        $email_soporte = Yii::$app->params['soporteCaiEmail'];
 
         $lista = rtrim($listaCantidad, ", "); 
         if($tipo_mensaje == "registro"){
@@ -314,13 +323,11 @@ class FormDatosFacturacionController extends Controller
             - **Monto total:** $ $monto_total
 
             Una vez que se valide el depósito efectuado se notificará la confirmación para el ingreso.
-
-            Si requiere asistencia o tiene alguna inquietud, no dude en contactarnos al teléfono $telefono_contacto.
+            Si requiere asistencia o tiene alguna inquietud, no dude en contactarnos a, $email_soporte.
 
             Atentamente,
 
-            **Equipo CAI**
-            Teléfono: $telefono_contacto
+            **Equipo CAI**            
             EOT;
         }
         else if($tipo_mensaje == "rev_exito")
@@ -331,14 +338,13 @@ class FormDatosFacturacionController extends Controller
 
             Por medio de la presente, le notificamos que posterior a la validación, se CONFIRMA su compra de boletos para el **Complejo Arqueológico Ingapirca**.
             
-            Agradecemos su visita y esperamos que disfrute de su experiencia en el Complejo Arqueológico Ingapirca y le recordamos que debe presentarse a las instalaciones 10 minutos antes de su horario de ingreso                                                            
+            Agradecemos su visita y esperamos que disfrute de su experiencia en el Complejo Arqueológico Ingapirca y le recordamos que debe presentarse a las instalaciones 10 minutos antes de su horario de ingreso.  
             
-            Si requiere asistencia o tiene alguna inquietud, no dude en contactarnos al teléfono $telefono_contacto.
+            Si requiere asistencia o tiene alguna inquietud, no dude en contactarnos a, $email_soporte.
 
             Atentamente,
 
-            **Equipo CAI**
-            Teléfono: $telefono_contacto
+            **Equipo CAI**            
             EOT;
         }
         else if($tipo_mensaje == "rev_rechazo")
@@ -347,16 +353,15 @@ class FormDatosFacturacionController extends Controller
             Estimado/a $nombre_usuario,
             Reciba un cordial saludo.
 
-            Por medio de la presente, le notificamos que posterior a la validación, se RECHAZA su compra de boletos para el **Complejo Arqueológico Ingapirca**.
+            Por medio de la presente, le notificamos que posterior a la validación, se RECHAZA su compra de boletos para el **Complejo Arqueológico Ingapirca**, debido al error por subir un archivo equivocado.
             
-            Agradecemos revisar la transferencia/depósitos realizados, ya que en nuestros sistemas no se registra el comprobante enviado.
+            Por favor revisar la transferencia/depósitos realizados, ya que en nuestros sistemas no se registra el comprobante enviado.
             
-            Si requiere asistencia o tiene alguna inquietud, no dude en contactarnos al teléfono $telefono_contacto.
+            Si requiere asistencia o tiene alguna inquietud, no dude en contactarnos a, $email_soporte.
             
             Atentamente,
 
-            **Equipo CAI**
-            Teléfono: $telefono_contacto
+            **Equipo CAI**            
             EOT;
         }
         $result =Yii::$app->mailer->compose()
