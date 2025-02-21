@@ -122,6 +122,7 @@ class FormDatosFacturacionController extends Controller
             $transaction = \Yii::$app->db->beginTransaction();
 
             try {
+                $model->form_estado_factura=1;
                 // Obtener ip del cliente
                 $model->form_ip = Yii::$app->request->userIP;
                 
