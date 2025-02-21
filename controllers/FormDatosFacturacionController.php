@@ -337,7 +337,9 @@ class FormDatosFacturacionController extends Controller
 
             Atentamente,
 
-            **Equipo CAI**            
+            **Equipo CAI**     
+            
+            Nota: este correo es de uso de notificación, no responder.      
             EOT;
         }
         else if($tipo_mensaje == "rev_exito")
@@ -354,7 +356,9 @@ class FormDatosFacturacionController extends Controller
 
             Atentamente,
 
-            **Equipo CAI**            
+            **Equipo CAI**    
+            
+            Nota: este correo es de uso de notificación, no responder.
             EOT;
         }
         else if($tipo_mensaje == "rev_rechazo")
@@ -371,7 +375,9 @@ class FormDatosFacturacionController extends Controller
             
             Atentamente,
 
-            **Equipo CAI**            
+            **Equipo CAI**    
+            
+            Nota: este correo es de uso de notificación, no responder.        
             EOT;
         }
         $result =Yii::$app->mailer->compose()
