@@ -21,23 +21,6 @@ $(document).ready(function() {
         }
     });
 });
-document.addEventListener('DOMContentLoaded', function() {
-    var input = document.getElementById('fecha-visita');
-
-    input.addEventListener('input', function() {
-        var date = new Date(this.value);
-        var day = date.getUTCDay();
-
-        // 1 es lunes y 2 es martes
-        if (day === 1 || day === 2) {
-            this.setCustomValidity('Los días lunes y martes no están disponibles para la visita.');
-            this.reportValidity();
-            this.value = ''; // Restablece el valor del campo de fecha
-        } else {
-            this.setCustomValidity(''); // Restaura el estado normal si no es lunes ni martes
-        }
-    });
-});
 function poblarTarifario(campo) {
     var valor_campo = campo.value;
     var id_campo = campo.id;
@@ -103,11 +86,12 @@ function poblarNacionalidad(campo)
     var item_ix = separa_campo[1];
     var campo_nacionalidad = "#formdatosvisitante-" + item_ix + "-form_dvnacionalidad";
     if(valor_campo==1){
-        $(campo_nacionalidad).val(62);//es valor de ecuatoriano
+        $(campo_nacionalidad).val(62);//es valor de ecuatoriano                 
     }
     else{
         $(campo_nacionalidad).val("");
     }
+    
         
 }
 function updateTotal(campo) {

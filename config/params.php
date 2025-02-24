@@ -8,4 +8,5 @@ return [
     'contactoINPC' => '(593) 2227 927',
     'soporteCaiEmail' => 'informacioncai@patrimoniocultural.gob.ec',
     'bsVersion' => '5.x',
+    'user.passwordResetTokenExpire' => 3600, 
 ];

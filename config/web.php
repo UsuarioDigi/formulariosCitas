@@ -78,7 +78,8 @@ $config = [
                 'formdatosfacturacion/fixstatus' => 'form-datos-facturacion/fix-status',
                 'GET formdatosfacturacion/obtenerpreciotarifa' => 'form-datos-facturacion/obtenerpreciotarifa',           
                 'GET formdatosfacturacion/obtenerhorariosdisponibles' => 'form-datos-facturacion/obtenerhorariosdisponibles',
-           
+                'request-password-reset' => 'site/request-password-reset', // Ruta para solicitar restablecimiento de contraseña
+                'reset-password' => 'site/reset-password', 
 				],
 			
 		],

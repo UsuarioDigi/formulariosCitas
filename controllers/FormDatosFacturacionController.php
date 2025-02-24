@@ -306,6 +306,10 @@ class FormDatosFacturacionController extends Controller
         $subject = EMAIL_SUBJECT;
         $nombre_usuario = $model->form_dnombres_completos;
         $fecha_compra = date('Y-m-d H:i:s');
+        $fecha_visita = $model->form_dfecha_visita;
+        $hora_visita = $model->form_dhora_visita;
+        $selec_h_visita =FormHorarios::find()->where(['form_hid' => $hora_visita])->andWhere(['form_hoperadora'=>$model->form_esoperadora])->one();
+        $hora_visita_texto = $selec_h_visita->form_hnombre;
         $listaCantidad = "";
         $totalCantidad = 0;
         if($detalleVisitantes!=null){
@@ -330,6 +334,7 @@ class FormDatosFacturacionController extends Controller
             Por medio de la presente, le notificamos que su compra de boletos para el **Complejo Arqueológico Ingapirca** ha sido registrada exitosamente. A continuación, encontrará los detalles de su transacción:
 
             - **Fecha de compra:** $fecha_compra
+            - **Fecha y hora de visita :** $fecha_visita $hora_visita_texto
             - **Cantidad de boletos:** $cantidad_boletos
             $lista
             - **Monto total:** $ $monto_total
@@ -458,5 +463,5 @@ class FormDatosFacturacionController extends Controller
     {        
         return $this->redirect(['index']);
     }
-
 }
+?>

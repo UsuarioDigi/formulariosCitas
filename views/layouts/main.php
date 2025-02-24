@@ -19,9 +19,17 @@ DynamicFormAsset::register($this);
 AppAsset::register($this);
 
 $this->registerJsFile('@web/js/funciones_generales.js', ['depends' => [JqueryAsset::class]]); 
+?>
+
+<!-- Incluir CSS de Flatpickr -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.css">
+
+<!-- Incluir JavaScript de Flatpickr -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/flatpickr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.9/dist/l10n/es.js"></script>
 
 
-
+<?php
 $this->registerCsrfMetaTags();
 $this->registerMetaTag(['charset' => Yii::$app->charset], 'charset');
 $this->registerMetaTag(['name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, shrink-to-fit=no']);
@@ -91,7 +99,6 @@ echo Nav::widget([
         </div>
     </div>
 </footer>
-
 <?php $this->endBody() ?>
 </body>
 </html>

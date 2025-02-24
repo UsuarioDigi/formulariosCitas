@@ -30,13 +30,15 @@ $this->title = 'Inicio de Sesión';
                 ])->label("Recordarme")?>
                 <div class="form-group">
                     <div>
-                        <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+                        <?= Html::submitButton('Ingresar', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
                     </div>
                 </div>
 
             <?php ActiveForm::end(); ?>
         </div>
-        
+        <div class="d-flex align-items-center h-custom-2 px-5 ms-xl-4 mt-0 pt-0 pt-xl-0 mt-xl-n5">
+                <?= Html::a('Resetear contraseña', ['site/request-password-reset']) ?> <!-- Enlace para solicitar el restablecimiento de contraseña -->
+            </div>
       </div>
       <div class="col-sm-6 px-0 d-none d-sm-block">
             <img src="<?= Yii::getAlias('@web') ?>/images/login_patrimonio.jpg" alt="Login image" class="w-100 vh-20" style="object-fit: cover; object-position: left;">

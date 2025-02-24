@@ -129,8 +129,8 @@ use wbraganca\dynamicform\DynamicFormWidget;
                         <td><?= $form->field($detalleVisitante, "[{$i}]form_dvgenero")->dropDownList([1=>'M','2'=>'F'],
                                     ["prompt"=>"Seleccione una opción",'required'=>true])->label(false) ?></td>                                                
                         <td><?= $form->field($detalleVisitante, "[{$i}]form_dvcantidad")->textInput(['maxlength' => true,'class' => 'cantidad-total',"onblur"=>'calcularPrecio(this);'])->label(false) ?></td>
-                        <td><?= $form->field($detalleVisitante, "[{$i}]form_dvprecio")->textInput(['maxlength' => true])->label(false) ?></td>
-                        <td><?= $form->field($detalleVisitante, "[{$i}]form_dvprecio_total")->textInput(['maxlength' => true,'class' => 'precio-total'])->label(false) ?></td>
+                        <td><?= $form->field($detalleVisitante, "[{$i}]form_dvprecio")->textInput(['maxlength' => true,'readonly' => true])->label(false) ?></td>
+                        <td><?= $form->field($detalleVisitante, "[{$i}]form_dvprecio_total")->textInput(['maxlength' => true,'readonly' => true,'class' => 'precio-total'])->label(false) ?></td>
                         <td>                            
                             <button type="button" class="remove-item btn btn-danger btn-xs"><i class="glyphicon glyphicon-minus">-</i></button>                            
                         </td>
@@ -146,7 +146,7 @@ use wbraganca\dynamicform\DynamicFormWidget;
                     <td colspan="4">TOTAL A PAGAR ($)</td>
                     <td class="hidden"><?= $form->field($model, 'form_dtcantidad')->textInput(['maxlength' => 10])->label(false) ?></td>
                     <td></td>
-                    <td colspan="2"><?= $form->field($model, 'form_dtotal')->textInput(['maxlength' => 10])->label(false) ?></td>
+                    <td colspan="2"><?= $form->field($model, 'form_dtotal')->textInput(['maxlength' => 10,'readonly' => true])->label(false) ?></td>
                 </tr>
         </tfoot>
         </table>
@@ -176,3 +176,18 @@ use wbraganca\dynamicform\DynamicFormWidget;
     </div>
     <?php ActiveForm::end(); ?>
 </div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    flatpickr("#fecha-visita", {
+        disable: [
+            function(date) {
+                // Deshabilitar lunes (1) y martes (2)
+                return (date.getDay() === 1 || date.getDay() === 2);
+            }
+        ],
+        dateFormat: "Y-m-d", // Formato de la fecha
+        minDate: "today", // Fecha mínima
+        locale: "es"
+    });
+});
+</script>
