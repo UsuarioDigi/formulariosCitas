@@ -12,15 +12,17 @@ use yii\widgets\Pjax;
 /** @var yii\web\View $this */
 /** @var app\models\FormDatosFacturacionSearch $searchModel */
 /** @var ActiveDataProvider $dataProvider */
-
-$this->title = 'Información registro facturas';
+$complejo =CAHJ;
+if($complejoId==1)$complejo = CAI;
+$this->title = 'Información registro facturas '.$complejo;
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <div class="container form-datos-facturacion-index">
 
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-12">
             <h1><?= Html::encode($this->title) ?></h1>            
         </div>
     </div>
@@ -28,7 +30,12 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php
     $gridColumns = [
         ['class' => 'yii\grid\SerialColumn'],
-        'form_dnombres_completos',
+        [
+            'attribute' => 'form_dnombres_completos',
+            'value' => function($model) {
+                return strtoupper($model->form_dnombres_completos);
+            },
+        ],
         'form_ddireccion',
         [
             'attribute' => 'form_dfecha',
@@ -58,6 +65,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         return 'REVISADO';
                     case 3:
                         return 'RECHAZADO';
+                    case 4:
+                            return 'IN SITU';
                     default:
                         return 'DESCONOCIDO'; // Manejo de caso por defecto
                 }
@@ -66,6 +75,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 1 => 'PENDIENTE',
                 2 => 'REVISADO',
                 3 => 'RECHAZADO',
+                4 => 'IN SITU',
             ],
         ],
         [
@@ -134,6 +144,8 @@ $this->params['breadcrumbs'][] = $this->title;
                         return 'REVISADO';
                     case 3:
                         return 'RECHAZADO';
+                    case 4:
+                        return 'IN SITU';
                     default:
                         return 'DESCONOCIDO'; // Manejo de caso por defecto
                 }
@@ -164,6 +176,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     return ['class' => 'estado-revisado'];
                 case 3:
                     return ['class' => 'estado-rechazado'];
+                case 4:
+                        return ['class' => 'estado-insitu'];
                 default:
                     return [];
             }

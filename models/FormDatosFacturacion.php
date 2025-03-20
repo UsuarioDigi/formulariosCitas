@@ -24,6 +24,7 @@ use Yii;
  * @property string $form_fecha_registro
  * @property string $form_usuario
  * @property string $form_fecha_actualiza
+ * @property int $complejo_id
  */
 class FormDatosFacturacion extends \yii\db\ActiveRecord
 {
@@ -43,7 +44,7 @@ class FormDatosFacturacion extends \yii\db\ActiveRecord
             [['form_dnombres_completos', 'form_ddireccion', 'form_dfecha', 'form_dfecha_visita', 'form_dhora_visita','form_adjunto','form_dtotal'], 'required', 'message' => 'Este campo no puede estar vacío.'],            
             [['form_dfecha', 'form_dfecha_visita'], 'safe'],
             [['form_dhora_visita'], 'default', 'value' => null],
-            [['form_dhora_visita','form_esoperadora','form_dtcantidad','form_estado_factura'], 'integer'],
+            [['form_dhora_visita','form_esoperadora','form_dtcantidad','form_estado_factura','complejo_id'], 'integer'],
             [['form_dnombres_completos', 'form_ddireccion'], 'string', 'max' => 200],
             [['form_registro_operadora'], 'string', 'max' => 100],            
             [['form_dcedula'], 'string', 'max' => 150],

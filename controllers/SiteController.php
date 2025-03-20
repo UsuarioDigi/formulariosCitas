@@ -77,13 +77,14 @@ class SiteController extends Controller
      * @return Response|string
      */
     public function actionLogin()
-{
+{    
     if (!Yii::$app->user->isGuest) {
         return $this->goHome();
     }
 
     $model = new LoginForm();
     if ($model->load(Yii::$app->request->post()) && $model->login()) {
+        Yii::$app->session->set('complejo_id', $model->complejo_id);
         Yii::debug('Inicio de sesión exitoso', __METHOD__);
         Yii::debug('Usuario autenticado: ' . Yii::$app->user->identity->username, __METHOD__);
         Yii::debug('ID de usuario autenticado: ' . Yii::$app->user->id, __METHOD__);
@@ -91,10 +92,16 @@ class SiteController extends Controller
     } else {
         Yii::debug('Error en el inicio de sesión', __METHOD__);
     }
+    $imagenes = [
+        ['url' => Yii::getAlias('@web').'/images/carrusel/1.png', 'titulo' => 'Ingapirca', 'descripcion' => 'Pared del Inca'],
+        ['url' => Yii::getAlias('@web').'/images/carrusel/2.png', 'titulo' => 'Jaboncillo', 'descripcion' => 'Cultura manteña'],        
+    ];
+       
 
     $model->password = '';
     return $this->render('login', [
         'model' => $model,
+        'imagenes' => $imagenes,
     ]);
 }
     /**

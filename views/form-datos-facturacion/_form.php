@@ -2,6 +2,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use wbraganca\dynamicform\DynamicFormWidget;
+
 ?>
 <div class="customer-form">
     <?php $form = ActiveForm::begin(['id' => 'dynamic-form',
@@ -53,8 +54,8 @@ use wbraganca\dynamicform\DynamicFormWidget;
             <td colspan="3"><?=  $form->field($model, 'form_dcorreo')->input('email', ['maxlength' => false,'required'=>true])->label(false)?></td>
         </tr>
         <tr>
-            <td>FECHA DE VISITA:</td><td><?= $form->field($model, 'form_dfecha_visita',['inputOptions' => ['type'=>'date','required'=>true,"onchange"=>'poblarHorarios(this);','min'=>date('Y-m-d'),'id' => 'fecha-visita',]])->textInput()->label(false) ?> </td>    
-            <td>HORA DE VISITA:</td><td><?= $form->field($model, 'form_dhora_visita')->dropDownList([], ["prompt"=>"Seleccione una opción",'required'=>true,"onchange"=>'poblarTarifario(this);'])->label(false) ?>
+            <td>FECHA DE VISITA:</td><td><?= $form->field($model, 'form_dfecha_visita',['inputOptions' => ['type'=>'date','required'=>true,"onchange"=>'poblarHorarios(this,'.htmlspecialchars($id_complejo).');','min'=>date('Y-m-d'),'id' => 'fecha-visita',]])->textInput()->label(false) ?> </td>    
+            <td>HORA DE VISITA:</td><td><?= $form->field($model, 'form_dhora_visita')->dropDownList([], ["prompt"=>"Seleccione una opción",'required'=>true,"onchange"=>'poblarTarifario(this,'.htmlspecialchars($id_complejo).');'])->label(false) ?>
         <p class="warning-message">Para el ingreso debe presentarse 10 minutos antes</p></td>
         </tr>
     </table>
@@ -118,11 +119,11 @@ use wbraganca\dynamicform\DynamicFormWidget;
                                 echo Html::activeHiddenInput($detalleVisitante, "[{$i}]form_dvid");
                             }
                         ?>
-                        <td><?= $form->field($detalleVisitante, "[{$i}]form_dvoriginario")->dropDownList([1=>'NACIONAL','2'=>'EXTRANGERO'],
+                        <td><?= $form->field($detalleVisitante, "[{$i}]form_dvoriginario")->dropDownList([1=>'NACIONAL','2'=>'EXTRANJERO'],
                                     ["prompt"=>"Seleccione una opción",'required'=>true,"onchange"=>'poblarNacionalidad(this);'])->label(false) ?></td>                                                                                                              
-                        <td><?= $form->field($detalleVisitante, "[{$i}]form_dvtipo_visitante")->dropDownList(\yii\helpers\ArrayHelper::map(app\models\FormTipoVisitante::find()->orderBy(['form_tvorden' => SORT_ASC])->all(),
+                        <td><?= $form->field($detalleVisitante, "[{$i}]form_dvtipo_visitante")->dropDownList(\yii\helpers\ArrayHelper::map(app\models\FormTipoVisitante::find()->where(['complejo_id'=> $id_complejo])->orderBy(['form_tvorden' => SORT_ASC])->all(),
                                     "form_tvid","form_tvnombre"),
-                                    ["prompt"=>"Seleccione una opción",'required'=>true,"onchange"=>'poblarTarifario(this);'])->label(false) ?></td>
+                                    ["prompt"=>"Seleccione una opción",'required'=>true,"onchange"=>'poblarTarifario(this,'.htmlspecialchars($id_complejo).');'])->label(false) ?></td>
                         <td><?= $form->field($detalleVisitante, "[{$i}]form_dvnacionalidad")->dropDownList(\yii\helpers\ArrayHelper::map(app\models\FormNacionalidad::find()->all(),
                                     "form_nid","form_nnombre"),
                                     ["prompt"=>"Seleccione una opción",'required'=>true])->label(false) ?></td>                        

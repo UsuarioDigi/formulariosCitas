@@ -8,7 +8,7 @@ Yii::setAlias('@bootstrap5', dirname(__DIR__) . '/web/bootstrap5');
 
 $config = [
     'id' => 'basic',
-    'name' => 'Reservaciones complejo arqueológico INGAPIRCA',
+    'name' => 'Reservaciones complejos arqueológicos INPC',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
@@ -38,7 +38,7 @@ $config = [
         ],
         'session' => [
             'class' => 'yii\web\Session',
-            'timeout' => 86400, // 24 horas
+            'timeout' => 300, 
             'cookieParams' => [
                 'httponly' => true,
                 ],
@@ -71,10 +71,10 @@ $config = [
 			'enablePrettyUrl' => true,
 			'showScriptName' => false,
 			'rules' => [
-                '' => 'form-datos-facturacion/create',        
+                '' => 'form-datos-facturacion/menu',        
+                'formdatosfacturacion/create' => 'form-datos-facturacion/create',   
 				'formdatosfacturacion/reporte' => 'form-datos-facturacion/index', 
-				'formdatosfacturacion/view/<form_did:\d+>' => 'form-datos-facturacion/view', 
-				'formdatosfacturacion/create' => 'form-datos-facturacion/create', 								
+				'formdatosfacturacion/view/<form_did:\d+>' => 'form-datos-facturacion/view', 												
                 'formdatosfacturacion/fixstatus' => 'form-datos-facturacion/fix-status',
                 'GET formdatosfacturacion/obtenerpreciotarifa' => 'form-datos-facturacion/obtenerpreciotarifa',           
                 'GET formdatosfacturacion/obtenerhorariosdisponibles' => 'form-datos-facturacion/obtenerhorariosdisponibles',

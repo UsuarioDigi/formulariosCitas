@@ -53,18 +53,21 @@ class FormDatosFacturacionController extends Controller
      * @return string
      */
     public function actionIndex()
-{
-    Yii::debug('Estado de autenticación: ' . (Yii::$app->user->isGuest ? 'No autenticado' : 'Autenticado'), __METHOD__);
-    Yii::debug('ID de usuario autenticado: ' . Yii::$app->user->id, __METHOD__);
+    {
+        $complejoId = Yii::$app->session->get('complejo_id');   
+        Yii::debug('Estado de autenticación: ' . (Yii::$app->user->isGuest ? 'No autenticado' : 'Autenticado'), __METHOD__);
+        Yii::debug('ID de usuario autenticado: ' . Yii::$app->user->id, __METHOD__);
 
-    $searchModel = new FormDatosFacturacionSearch();
-    $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $searchModel = new FormDatosFacturacionSearch();
+        $searchModel->complejo_id = $complejoId;
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-    return $this->render('index', [
-        'searchModel' => $searchModel,
-        'dataProvider' => $dataProvider,
-    ]);
-}
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'complejoId' =>$complejoId
+        ]);
+    }
     
     
     
@@ -93,11 +96,12 @@ class FormDatosFacturacionController extends Controller
      * @return string|\yii\web\Response
      */
 
-     public function actionCreate()
-    {
+     public function actionCreate($id = null)
+    {        
     $model = new FormDatosFacturacion();
     $detalleVisitantes = [new FormDatosVisitante()];
     $datosCitas = [new FormDatosCitas()];
+    $this->view->params['selectedId'] = $id;
 
     if ($model->load(Yii::$app->request->post())) {
         $model->form_adjunto = UploadedFile::getInstance($model, 'form_adjunto');
@@ -108,9 +112,9 @@ class FormDatosFacturacionController extends Controller
 
         // validate all models
         $valid = $model->validate();
-        Yii::info("Validación de modelos completada 1: " . $valid);
+        Yii::debug("Validación de modelos completada 1: " . $valid);
         $validDetalles = DynamicModel::validateMultiple($detalleVisitantes);
-        Yii::info("Validación de modelos completada 2: " . $validDetalles);
+        Yii::debug("Validación de modelos completada 2: " . $validDetalles);
        
         foreach ($detalleVisitantes as $detalleVisitante) {
             if (!$detalleVisitante->validate()) {
@@ -118,7 +122,7 @@ class FormDatosFacturacionController extends Controller
             }
         }
         $valid = $validDetalles && $valid;
-        if ($valid) {
+        if ($valid) {            
             $transaction = \Yii::$app->db->beginTransaction();
 
             try {
@@ -126,8 +130,9 @@ class FormDatosFacturacionController extends Controller
                 // Obtener ip del cliente
                 $model->form_ip = Yii::$app->request->userIP;
                 $model->form_estado_factura=1;
-                $model->form_fecha_registro = date('Y-m-d H:i:s');;
-
+                $model->form_fecha_registro = date('Y-m-d H:i:s');
+                $model->complejo_id = $id;
+                                
                 if ($model->save(false)) {
                     Yii::info("form_did asignado: " . $model->form_did);
 
@@ -141,10 +146,7 @@ class FormDatosFacturacionController extends Controller
                             break;
                         }
                     }
-
-
             /** Almacenar información de adjunto */
-
             $model->form_adjunto = UploadedFile::getInstance($model, 'form_adjunto');
             if ($model->form_adjunto instanceof UploadedFile) {
                 $filePath = 'uploads/' . $model->form_adjunto->baseName . '_' . $model->form_did . '.' . $model->form_adjunto->extension;
@@ -180,7 +182,7 @@ class FormDatosFacturacionController extends Controller
                         }
                     }
                     $transaction->commit();
-                    $this-> actionSendNotification($model, $detalleVisitantes,"registro");
+                    $this-> actionSendNotification($model, $detalleVisitantes,"registro",$id);
                     
                     Yii::$app->session->setFlash('success', 'Los datos se almacenaron con éxito.');
                     return $this->refresh();
@@ -201,6 +203,7 @@ class FormDatosFacturacionController extends Controller
     return $this->render('create', [
         'model' => $model,
         'detalleVisitantes' => (empty($detalleVisitantes)) ? [new FormDatosVisitante] : $detalleVisitantes,
+        'id_complejo'=>$id,
     ]);
 }
 
@@ -262,10 +265,13 @@ class FormDatosFacturacionController extends Controller
     {               
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         $id_val = Yii::$app->request->get('valorid'); // Cambiado a 'get'      
-        $val_opera = Yii::$app->request->get('val_opera');            
+        $val_opera = Yii::$app->request->get('val_opera');     
+        $id_complejo = Yii::$app->request->get('id_complejo');     
+               
         $horario = FormHorarios::find()     
                     ->where(['=', 'form_hestado', 1])  
-                    ->andWhere(['=', 'form_hoperadora', $val_opera])                                
+                    ->andWhere(['=', 'form_hoperadora', $val_opera])      
+                    ->andWhere(['=', 'complejo_id', $id_complejo])                          
                     ->orderBy(['form_hid' => SORT_ASC])
                     ->all();
         $html="<option value=''>Seleccione un horario</option>";          
@@ -274,7 +280,7 @@ class FormDatosFacturacionController extends Controller
                 $cita = FormDatosCitas::find()
                     ->where(['=', 'form_cfecha', $id_val])
                     ->andWhere(['=', 'form_hid', $clave->form_hid])
-                    ->andWhere(['=', 'form_dcestado', 1])
+                    ->andWhere(['=', 'form_dcestado', 1])                     
                     ->sum('form_dccantidad'); 
                     $turno_d =30-$cita;
                     if($turno_d<1)continue;
@@ -288,9 +294,11 @@ class FormDatosFacturacionController extends Controller
     public function actionObtenerpreciotarifa()
     {        
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        $id_val = Yii::$app->request->get('valorid'); // Cambiado a 'get'      
+        $id_val = Yii::$app->request->get('valorid'); // Cambiado a 'get'     
+        $id_complejo = Yii::$app->request->get('id_complejo'); // Cambiado a 'get' 
         $tarifa = FormTipoVisitante::find()
                     ->where(['=', 'form_tvid', $id_val])
+                    ->andWhere(['=', 'complejo_id', $id_complejo])
                     ->one();
         if ($tarifa) {
             return ['precio' => $tarifa->form_tvtarifa];
@@ -301,9 +309,9 @@ class FormDatosFacturacionController extends Controller
     /*
      * Función para enviar un email al usuario que factura
      */
-    public function actionSendNotification($model, $detalleVisitantes=null,$tipo_mensaje)
+    public function actionSendNotification($model, $detalleVisitantes=null,$tipo_mensaje,$id_complejo=null)
     {
-        $subject = EMAIL_SUBJECT;
+        
         $nombre_usuario = $model->form_dnombres_completos;
         $fecha_compra = date('Y-m-d H:i:s');
         $fecha_visita = $model->form_dfecha_visita;
@@ -321,8 +329,19 @@ class FormDatosFacturacionController extends Controller
             }
             $cantidad_boletos = $totalCantidad;
             $monto_total = $model->form_dtotal;
+        }        
+        if($id_complejo==1){
+            $complejo =CAI;
+            $email_soporte = Yii::$app->params['soporteCaiEmail'];
+            $notifica_email = Yii::$app->params['caiEmail'];
+            $subject = EMAIL_SUBJECTCAI;
         }
-        $email_soporte = Yii::$app->params['soporteCaiEmail'];
+        else {
+            $complejo = CAHJ;
+            $email_soporte = Yii::$app->params['soporteCahjEmail'];
+            $notifica_email = Yii::$app->params['cahjEmail'];
+            $subject = EMAIL_SUBJECTCAHJ;
+        }
 
         $lista = rtrim($listaCantidad, ", "); 
         if($tipo_mensaje == "registro"){
@@ -331,7 +350,7 @@ class FormDatosFacturacionController extends Controller
 
             Reciba un cordial saludo.
 
-            Por medio de la presente, le notificamos que su compra de boletos para el **Complejo Arqueológico Ingapirca** ha sido registrada exitosamente. A continuación, encontrará los detalles de su transacción:
+            Por medio de la presente, le notificamos que su compra de boletos para el **$complejo** ha sido registrada exitosamente. A continuación, encontrará los detalles de su transacción:
 
             - **Fecha de compra:** $fecha_compra
             - **Fecha y hora de visita :** $fecha_visita $hora_visita_texto
@@ -344,7 +363,7 @@ class FormDatosFacturacionController extends Controller
 
             Atentamente,
 
-            **Equipo CAI**     
+            **Equipo $complejo**     
             
             Nota: este correo es de uso de notificación, no responder.      
             EOT;
@@ -355,7 +374,7 @@ class FormDatosFacturacionController extends Controller
             Estimado/a $nombre_usuario,
             Reciba un cordial saludo.
 
-            Por medio de la presente, le notificamos que posterior a la validación, se CONFIRMA su compra de boletos para el **Complejo Arqueológico Ingapirca**.
+            Por medio de la presente, le notificamos que posterior a la validación, se CONFIRMA su compra de boletos para el **$complejo**.
             
             Agradecemos su visita y esperamos que disfrute de su experiencia en el Complejo Arqueológico Ingapirca y le recordamos que debe presentarse a las instalaciones 10 minutos antes de su horario de ingreso.  
             
@@ -363,7 +382,7 @@ class FormDatosFacturacionController extends Controller
 
             Atentamente,
 
-            **Equipo CAI**    
+            **Equipo $complejo**    
             
             Nota: este correo es de uso de notificación, no responder.
             EOT;
@@ -374,7 +393,7 @@ class FormDatosFacturacionController extends Controller
             Estimado/a $nombre_usuario,
             Reciba un cordial saludo.
 
-            Por medio de la presente, le notificamos que posterior a la validación, se RECHAZA su compra de boletos para el **Complejo Arqueológico Ingapirca**, debido al error por subir un archivo equivocado.
+            Por medio de la presente, le notificamos que posterior a la validación, se RECHAZA su compra de boletos para el **$complejo**, debido al error por subir un archivo equivocado.
             
             Por favor revisar la transferencia/depósitos realizados, ya que en nuestros sistemas no se registra el comprobante enviado.
             
@@ -382,14 +401,14 @@ class FormDatosFacturacionController extends Controller
             
             Atentamente,
 
-            **Equipo CAI**    
+            **Equipo $complejo**    
             
             Nota: este correo es de uso de notificación, no responder.        
             EOT;
         }
         $result =Yii::$app->mailer->compose()
             ->setTo($model->form_dcorreo)  // Dirección de correo del destinatario
-            ->setFrom(Yii::$app->params['caiEmail'])  // Dirección de correo de envío
+            ->setFrom($notifica_email)  // Dirección de correo de envío
             ->setSubject($subject)
             ->setTextBody($body)  // Cuerpo del mensaje (puedes usar HTML también con setHtmlBody())
             ->send();
@@ -460,8 +479,13 @@ class FormDatosFacturacionController extends Controller
         }        
     }
     public function actionReporte()
-    {        
+    {                                 
         return $this->redirect(['index']);
+    }
+    public function actionMenu()
+    {    
+        return $this->render('menu', [        
+    ]);
     }
 }
 ?>

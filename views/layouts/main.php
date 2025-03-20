@@ -78,11 +78,17 @@ echo Nav::widget([
 </header>
 <main id="main" class="flex-shrink-0" role="main">
     <div class="container">
-    <?php if (!(Yii::$app->controller->id === 'site' && Yii::$app->controller->action->id === 'login')): ?>
-        <div class="banner">
-            <img src="<?= Url::to('@web/images/banner.jpg') ?>" alt="Banner" class="img-responsive">
-        </div>
-    <?php endif; ?>
+        <?php if (!(Yii::$app->controller->id === 'site' && Yii::$app->controller->action->id === 'login')): ?>
+            <div class="banner">
+                <?php if (!empty($this->params['selectedId']) && $this->params['selectedId'] == 1): ?>
+                    <img src="<?= Url::to('@web/images/banner.jpg') ?>" alt="Banner 1" class="img-responsive">
+                <?php elseif (!empty($this->params['selectedId']) && $this->params['selectedId'] == 2): ?>
+                    <img src="<?= Url::to('@web/images/banner_jaboncillo.jpg') ?>" alt="Banner 2" class="img-responsive">
+                <?php else: ?>
+                   
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
         <?php if (!empty($this->params['breadcrumbs'])): ?>
             <?= Breadcrumbs::widget(['links' => $this->params['breadcrumbs']]) ?>
         <?php endif ?>
@@ -90,7 +96,6 @@ echo Nav::widget([
         <?= $content ?>
     </div>
 </main>
-
 <footer id="footer" class="mt-auto py-3 bg-light">
     <div class="container">
         <div class="row text-muted">

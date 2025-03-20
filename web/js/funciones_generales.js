@@ -21,7 +21,7 @@ $(document).ready(function() {
         }
     });
 });
-function poblarTarifario(campo) {
+function poblarTarifario(campo,id_complejo) {
     var valor_campo = campo.value;
     var id_campo = campo.id;
     var separa_campo = id_campo.split('-');
@@ -33,7 +33,7 @@ function poblarTarifario(campo) {
     $.ajax({
         type: "get", 
         url: "obtenerpreciotarifa" , 
-        data: { valorid:valor_campo },
+        data: { valorid:valor_campo,id_complejo:id_complejo},
         success: function(result) {
             if (result && result.precio !== undefined) {
                 $(campo_precio).val(result.precio);
@@ -50,8 +50,9 @@ function poblarTarifario(campo) {
     });
     
 };
-function poblarHorarios(campo)
+function poblarHorarios(campo,id_complejo)
 {    
+    
     var valor_campo = campo.value;    
     var val_opera= $('#formdatosfacturacion-form_esoperadora').val();
     if(val_opera ==""){
@@ -62,7 +63,8 @@ function poblarHorarios(campo)
             type: "get", 
             url: "obtenerhorariosdisponibles" , 
             data: { valorid:valor_campo,
-                val_opera:val_opera
+                val_opera:val_opera,
+                id_complejo:id_complejo
             },
             success: function(result) {            
                 if (result) {

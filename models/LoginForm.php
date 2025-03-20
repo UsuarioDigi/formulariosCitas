@@ -19,6 +19,7 @@ class LoginForm extends Model
 
     private $_user = false;
 
+    public $complejo_id = 0;
 
     /**
      * @return array the validation rules.
@@ -27,7 +28,7 @@ class LoginForm extends Model
     {
         return [
             // username and password are both required
-            [['username', 'password'], 'required',"message"=>"El campo no debe estar vacío"],
+            [['username', 'password','complejo_id'], 'required',"message"=>"El campo no debe estar vacío"],
             // rememberMe must be a boolean value
             ['rememberMe', 'boolean'],
             // password is validated by validatePassword()
@@ -58,11 +59,20 @@ class LoginForm extends Model
      * @return bool whether the user is logged in successfully
      */
     public function login()
-{
+{    
     if ($this->validate()) {
         Yii::debug('Usuario validado correctamente', __METHOD__);
         $user = $this->getUser();
         Yii::debug('Usuario obtenido: ' . print_r($user, true), __METHOD__);
+
+        // Verificar si el usuario pertenece al complejo_id proporcionado
+        /*print $user->complejo_id."y".$this->complejo_id;
+        exit;*/
+        if ($user->complejo_id != $this->complejo_id) {
+            Yii::debug('El usuario no pertenece al complejo seleccionado', __METHOD__);
+            $this->addError('complejo_id', 'El usuario no corresponde al complejo seleccionado.');
+            return false;
+        }
 
         $loggedIn = Yii::$app->user->login($user, $this->rememberMe ? 3600 * 24 * 30 : 0);
         Yii::debug('Estado de inicio de sesión: ' . ($loggedIn ? 'exitoso' : 'fallido'), __METHOD__);

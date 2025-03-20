@@ -11,7 +11,7 @@ use yii\widgets\ActiveForm;
         'id' => 'change-status-form',        
     ]); ?>
     <?= $form->field($model, 'form_estado_factura')->dropDownList(
-        [1 => 'PENDIENTE', 2 => 'REVISADO', 3 => 'RECHAZADO'],
+        [1 => 'PENDIENTE', 2 => 'REVISADO', 3 => 'RECHAZADO', 4 => 'IN SITU'],
         ['id' => 'form_estado_factura', 'class' => 'form-control']
     )->label(false) ?>
     <?= Html::hiddenInput('model_id', $model->form_did, ['id' => 'model_id']) ?>

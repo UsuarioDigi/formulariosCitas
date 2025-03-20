@@ -73,12 +73,20 @@ class FormDatosFacturacionSearch extends FormDatosFacturacion
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'form_did' => $this->form_did,
-            'form_dfecha' => $this->form_dfecha,
-            'form_dfecha_visita' => $this->form_dfecha_visita,
+            'form_did' => $this->form_did,                        
             'form_dhora_visita' => $this->form_dhora_visita,
             'form_estado_factura' => $this->form_estado_factura,
         ]);
+        if (!empty($this->form_dfecha)) {
+            $query->andWhere(['like', 'CAST(form_dfecha AS TEXT)', $this->form_dfecha]);
+        }
+        if (!empty($this->form_dfecha_visita)) {
+            $query->andWhere(['like', 'CAST(form_dfecha_visita AS TEXT)', $this->form_dfecha_visita]);
+        }
+        // Filtro adicional para complejo_id
+        if ($this->complejo_id !== null) {
+            $query->andFilterWhere(['complejo_id' => $this->complejo_id]);
+        }
 
         $query->andFilterWhere(['ilike', 'form_dnombres_completos', $this->form_dnombres_completos])
             ->andFilterWhere(['ilike', 'form_ddireccion', $this->form_ddireccion])

@@ -2,9 +2,8 @@
 
 return [
     'class' => 'yii\db\Connection',
-    'dsn' => 'pgsql:host=172.16.1.41;port=5432;dbname=formularios_citas',
-    'username' => 'sistemas',
-    'password' => 'temporal123',
+    'dsn' => 'pgsql:host=localhost;port=5432;dbname=reservaciones',
+    'username' => 'postgres',
+    'password' => '',
     'charset' => 'utf8',
 ];
-
