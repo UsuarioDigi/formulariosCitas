@@ -13,6 +13,7 @@ use yii\widgets\Pjax;
 /** @var app\models\FormDatosFacturacionSearch $searchModel */
 /** @var ActiveDataProvider $dataProvider */
 $complejo =CAHJ;
+
 if($complejoId==1)$complejo = CAI;
 $this->title = 'Información registro facturas '.$complejo;
 $this->params['breadcrumbs'][] = $this->title;

@@ -83,7 +83,7 @@ class FormDatosFacturacionSearch extends FormDatosFacturacion
         if (!empty($this->form_dfecha_visita)) {
             $query->andWhere(['like', 'CAST(form_dfecha_visita AS TEXT)', $this->form_dfecha_visita]);
         }
-        // Filtro adicional para complejo_id
+        // Filtro adicional para complejo_id                
         if ($this->complejo_id !== null) {
             $query->andFilterWhere(['complejo_id' => $this->complejo_id]);
         }

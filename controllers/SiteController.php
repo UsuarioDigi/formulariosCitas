@@ -84,6 +84,8 @@ class SiteController extends Controller
 
     $model = new LoginForm();
     if ($model->load(Yii::$app->request->post()) && $model->login()) {
+        //print "aaa ".$model->complejo_id;
+        //exit();
         Yii::$app->session->set('complejo_id', $model->complejo_id);
         Yii::debug('Inicio de sesión exitoso', __METHOD__);
         Yii::debug('Usuario autenticado: ' . Yii::$app->user->identity->username, __METHOD__);

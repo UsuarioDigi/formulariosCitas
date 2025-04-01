@@ -53,7 +53,7 @@ class FormDatosFacturacionController extends Controller
      * @return string
      */
     public function actionIndex()
-    {
+    {		
         $complejoId = Yii::$app->session->get('complejo_id');   
         Yii::debug('Estado de autenticación: ' . (Yii::$app->user->isGuest ? 'No autenticado' : 'Autenticado'), __METHOD__);
         Yii::debug('ID de usuario autenticado: ' . Yii::$app->user->id, __METHOD__);

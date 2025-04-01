@@ -22,6 +22,8 @@ $(document).ready(function() {
     });
 });
 function poblarTarifario(campo,id_complejo) {
+
+    var diaSeleccionado =  document.getElementById('fecha-visita').value;
     var valor_campo = campo.value;
     var id_campo = campo.id;
     var separa_campo = id_campo.split('-');
@@ -29,6 +31,29 @@ function poblarTarifario(campo,id_complejo) {
     var campo_precio = "#formdatosvisitante-" + item_ix + "-form_dvprecio";
     var campo_precio_tot = "#formdatosvisitante-" + item_ix + "-form_dvprecio_total";
     console.log(campo_precio);
+
+    const fechaActual = new Date(); // Obtiene la fecha y hora actual
+    const diaActual = fechaActual.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+    const horaActual = fechaActual.getHours(); // Hora actual en formato 24 horas
+    var selectElement = document.getElementById('formdatosfacturacion-form_dhora_visita');
+    // Obtener la opción seleccionada
+    var selectedOption = selectElement.options[selectElement.selectedIndex];    
+    // Obtener el texto que se muestra en la opción seleccionada
+    var displayedText = selectedOption.text;    
+    var separa_campo_sele = displayedText.split('-');
+    var item_hora = separa_campo_sele[0];
+    var separa_campo_sele = item_hora.split('h');
+    var hora_selec = parseInt(separa_campo_sele[0]);
+    
+    if (diaSeleccionado === diaActual) {        
+        // Si es el mismo día, validar que haya al menos 8 horas de diferencia
+        const diferenciaHoras = hora_selec - horaActual;        
+        if (diferenciaHoras < 8) {
+            alert("Debe seleccionar al menos 8 horas de anticipación para el mismo día.");
+            document.getElementById('formdatosfacturacion-form_dhora_visita').value="";
+            return;
+        }
+    }
     
     $.ajax({
         type: "get", 
@@ -51,8 +76,7 @@ function poblarTarifario(campo,id_complejo) {
     
 };
 function poblarHorarios(campo,id_complejo)
-{    
-    
+{        
     var valor_campo = campo.value;    
     var val_opera= $('#formdatosfacturacion-form_esoperadora').val();
     if(val_opera ==""){
